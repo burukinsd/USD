@@ -16,12 +16,13 @@ using System.Windows.Shapes;
 namespace USD
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MammaView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MammaView : Window
     {
-        public MainWindow()
+        public MammaView()
         {
+            DataContext = new MammaViewModel();
             InitializeComponent();
         }
     }

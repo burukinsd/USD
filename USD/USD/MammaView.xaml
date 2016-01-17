@@ -1,0 +1,247 @@
+﻿<Window x:Class="USD.MammaView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:USD"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="УЗД молочной железы" WindowState="Maximized"
+        MinWidth="800" MinHeight="600"
+        >
+    <Window.Resources>
+        <local:RadioButtonChecedConverter x:Key="RadioButtonCheckedConverter" />
+        <System:Boolean x:Key="True">True</System:Boolean>
+        <System:Boolean x:Key="False">False</System:Boolean>
+        <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <local:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition MaxHeight="40" MinHeight="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
+            <Grid Margin="30,0,15,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="112" MinHeight="112"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
+                    <Label >Дата исследования:</Label>
+                    <DatePicker Margin="0,3,5,3" MaxWidth="150" MinWidth="150" HorizontalAlignment="Left" SelectedDate="{Binding VisitDate, Mode=TwoWay}"></DatePicker>
+                </DockPanel>
+
+                <DockPanel  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" >
+                    <Label>ФИО:</Label>
+                    <TextBox Margin="0,3,5,3" Text="{Binding FIO, Mode=TwoWay}"></TextBox>
+                </DockPanel>
+                <DockPanel  Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3">
+                    <Label >Год рождения:</Label>
+                    <TextBox Margin="0,3,5,3"  MaxWidth="50" MinWidth="50" HorizontalAlignment="Left" Text="{Binding BirthYear, Mode=TwoWay}"></TextBox>
+                </DockPanel>
+
+                <DockPanel  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12" HorizontalAlignment="Stretch">
+                    <RadioButton VerticalAlignment="Center" GroupName="MenstrualCycle" Content="1-й день менстурального цикла:" 
+                                 IsChecked="{Binding PhisiologicalStatus, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Normal, Mode=TwoWay}"></RadioButton>
+                    <DatePicker IsEnabled="{Binding PhisiologicalStatus, Mode = OneWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Normal}"
+                                SelectedDate="{Binding FirstDayOfLastMenstrualCycle, Mode=TwoWay}"
+                                Margin = "5,3" MaxWidth="150" MinWidth="150" HorizontalAlignment="Left"></DatePicker>
+                </DockPanel>
+                <DockPanel  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="12" HorizontalAlignment="Stretch">
+                    <RadioButton VerticalAlignment="Center" GroupName="MenstrualCycle" Content="менопауза:" 
+                                 IsChecked="{Binding PhisiologicalStatus, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Menopause}"></RadioButton>
+                    <TextBox IsEnabled="{Binding PhisiologicalStatus, Mode = OneWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Menopause}"
+                             Text="{Binding MenopauseText, Mode=TwoWay}" Margin="5,3" MaxWidth="150" MinWidth="150" HorizontalAlignment="Left"></TextBox>
+                </DockPanel>
+                <RadioButton Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" GroupName="MenstrualCycle" Content="беременность" 
+                                 IsChecked="{Binding PhisiologicalStatus, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Pregant}"></RadioButton>
+                <RadioButton Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" GroupName="MenstrualCycle" Content="лактация" 
+                                 IsChecked="{Binding PhisiologicalStatus, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Lactation}"></RadioButton>
+
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="5">Кожа и подкожная жировая клетчатка:</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="6" VerticalAlignment="Center" GroupName="Skin" 
+                             IsChecked="{Binding IsSkinChanged, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter},
+                             ConverterParameter={StaticResource False}}">не изменены</RadioButton>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="7">
+                    <RadioButton VerticalAlignment="Center" GroupName="Skin" IsChecked="{Binding IsSkinChanged, Mode=TwoWay, Converter={StaticResource RadioButtonCheckedConverter},
+                                 ConverterParameter={StaticResource True}}">изменены:</RadioButton>
+                    <TextBox  Margin="5,3" TextWrapping="WrapWithOverflow" IsEnabled="{Binding IsSkinChanged, Mode=OneWay}" Text="{Binding SkinChangedDesc, Mode=TwoWay}"></TextBox>
+                </DockPanel>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="8">Соотношение тканей, формирующих железу:</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="9" VerticalAlignment="Center" GroupName="Tissue"
+                             IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=MoreGlandularLessAdipose}">
+                    много железистой и мало жировой (подкожной);</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="10" VerticalAlignment="Center" GroupName="Tissue"
+                             IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=EnoughGlandularMoreAdipose}">
+                    достаточно железистой и много жировой (подкожной и в центральном отделе);</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="11" VerticalAlignment="Center" GroupName="Tissue"
+                             IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=LessGlandular}">
+                    мало железистой в виде единичных включений между жировой клетчаткой</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="12" VerticalAlignment="Center" GroupName="Tissue"
+                             IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=MoreAdipose}">
+                    много жировой (подкожной, в центральнх, задних отделах)</RadioButton>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="13">Толщина железистого слоя:</Label>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="14">
+                    <Label>Справа:</Label>
+                    <TextBox Width="30" Margin="0,5" Text="{Binding RightThicknessGlandularLayer, Mode = TwoWay}"></TextBox>
+                    <Label>мм</Label>
+                    <Label>Слева:</Label>
+                    <TextBox Width="30" Margin="0,5" Text="{Binding LeftThicknessGlandularLayer, Mode = TwoWay}"></TextBox>
+                    <Label>мм</Label>
+                </StackPanel>
+
+                <Label Grid.Column="0" Grid.Row="15">Протоки</Label>
+                <RadioButton Grid.Column="1" Grid.ColumnSpan="11"  Grid.Row="15" VerticalAlignment="Center" GroupName="Canals" IsChecked="True">не расширены</RadioButton>
+                <DockPanel Grid.Column="1" Grid.ColumnSpan="11" Grid.Row="16">
+                    <RadioButton GroupName="Canals" VerticalAlignment="Center" >расширены до</RadioButton>
+                    <TextBox IsEnabled="True" Margin="5,3"></TextBox>
+                </DockPanel>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="17">Дифузные изменения:</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="18" VerticalAlignment="Center" GroupName="DiffuseChanges" IsChecked="True">умеренные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="19" VerticalAlignment="Center" GroupName="DiffuseChanges">выраженные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="20" VerticalAlignment="Center" GroupName="DiffuseChanges">незначительные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="21" VerticalAlignment="Center" GroupName="DiffuseChanges">нет</RadioButton>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="22">
+                    <Label>Особенности</Label>
+                    <TextBox Margin="5,3" TextWrapping="WrapWithOverflow"></TextBox>
+                </DockPanel>
+
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="23">
+                    <Label>Визуализация позадисосковой области:</Label>
+                    <StackPanel Orientation="Vertical" Margin="0,7,0,0">
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center" IsChecked="True">хорошая</RadioButton>
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center">невозможная</RadioButton>
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center">только в косых проекциях</RadioButton>
+                    </StackPanel>
+                </DockPanel>
+
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="24">Кисты:</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="25" VerticalAlignment="Center" GroupName="Cyst" IsChecked="True">не выявляются</RadioButton>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="26">
+                    <RadioButton VerticalAlignment="Center" GroupName="Cyst">выявляются:</RadioButton>
+                    <TextBox Margin="5,3" IsEnabled="False"  TextWrapping="WrapWithOverflow"/>
+                </DockPanel>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="27">Очаговые образования (изменения):</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="28" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="True">не выявляются</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="29" VerticalAlignment="Center" GroupName="FocalFormation">выявляются</RadioButton>
+                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№ п/п"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Локализация"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Размер, мм"></DataGridTextColumn>
+                        <DataGridComboBoxColumn Header="Контуры"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="Эхогенность"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="Внутреняя структура"></DataGridComboBoxColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="31">Региональные лифматические узлы (над-, подключичиные, подмышечные):</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="32" VerticalAlignment="Center" GroupName="LymphNodes" IsChecked="True">не определяются</RadioButton>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="33">
+                    <RadioButton VerticalAlignment="Center" GroupName="LymphNodes">оперделяются:</RadioButton>
+                    <TextBox Margin="5,3" TextWrapping="WrapWithOverflow"/>
+                </DockPanel>
+
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="34">
+                    <Label>Дополнительно:</Label>
+                    <TextBox Margin="5,3"></TextBox>
+                </DockPanel>
+
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="35">Заключение:</Label>
+                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="36" VerticalAlignment="Center" IsChecked="True">УЗ данных за патологию молочных желез не получено</CheckBox>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="37">
+                    <CheckBox VerticalAlignment="Center">УЗ признаки фиброзно-кистозной болезни</CheckBox>
+                    <TextBox Margin="5,3"/>
+                </DockPanel>
+                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="38" VerticalAlignment="Center">Фиброзно-жировая инволюция</CheckBox>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="39">
+                    <CheckBox VerticalAlignment="Center"></CheckBox>
+                    <TextBox Margin="5,3"></TextBox>
+                </DockPanel>
+
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="40">
+                    <Label>Рекомендована консультация</Label>
+                    <ComboBox MaxWidth="150" MinWidth="150" Margin="5,3" HorizontalAlignment="Left"></ComboBox>
+                </DockPanel>
+            </Grid>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+            <Button IsEnabled="True" MinWidth="100" Margin="20,3" Command="{Binding SaveCommand}">Сохранить</Button>
+            <Button IsEnabled="False" MinWidth="100" Margin="20,3">Экспорт в Word</Button>
+            <Button IsEnabled="False" MinWidth="100" Margin="20,3">База</Button>
+        </StackPanel>
+    </Grid>
+</Window>
