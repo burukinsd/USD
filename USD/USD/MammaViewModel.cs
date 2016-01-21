@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows.Media;
 using USD.Annotations;
 
 namespace USD
@@ -15,6 +17,10 @@ namespace USD
             FirstDayOfLastMenstrualCycle = DateTime.Today;
             IsSkinChanged = false;
             TissueRatio = TissueRatio.EnoughGlandularMoreAdipose;
+            IsCanalsExpanded = false;
+            DiffuseChanges = DiffuseChanges.Moderate;
+            VisualizatioNippleArea = VisualizatioNippleArea.Good;
+            FocalFormations = new ObservableCollection<FocalFormation> {new FocalFormation() {Test = "Test"}};
 
             SaveCommand = new RelayCommand(x => Save());
         }
@@ -40,6 +46,12 @@ namespace USD
         private TissueRatio _tissueRatio;
         private decimal? _leftThicknessGlandularLayer;
         private decimal? _rightThicknessGlandularLayer;
+        private bool _isCanalsExpanded;
+        private string _canalsExpandingDesc;
+        private DiffuseChanges _diffuseChanges;
+        private string _diffuseChangesFeatures;
+        private VisualizatioNippleArea _visualizatioNippleArea;
+        private ObservableCollection<FocalFormation> _focalFormations;
 
         public DateTime VisitDate
         {
@@ -162,6 +174,72 @@ namespace USD
             }
         }
 
+        public bool IsCanalsExpanded
+        {
+            get { return _isCanalsExpanded; }
+            set
+            {
+                if (value == _isCanalsExpanded) return;
+                _isCanalsExpanded = value;
+                OnPropertyChanged(nameof(IsCanalsExpanded));
+            }
+        }
+
+        public string CanalsExpandingDesc
+        {
+            get { return _canalsExpandingDesc; }
+            set
+            {
+                if (value == _canalsExpandingDesc) return;
+                _canalsExpandingDesc = value;
+                OnPropertyChanged(nameof(CanalsExpandingDesc));
+            }
+        }
+
+        public DiffuseChanges DiffuseChanges
+        {
+            get { return _diffuseChanges; }
+            set
+            {
+                if (value == _diffuseChanges) return;
+                _diffuseChanges = value;
+                OnPropertyChanged(nameof(DiffuseChanges));
+            }
+        }
+
+        public string DiffuseChangesFeatures
+        {
+            get { return _diffuseChangesFeatures; }
+            set
+            {
+                if (value == _diffuseChangesFeatures) return;
+                _diffuseChangesFeatures = value;
+                OnPropertyChanged(nameof(DiffuseChangesFeatures));
+            }
+        }
+
+        public VisualizatioNippleArea VisualizatioNippleArea
+        {
+            get { return _visualizatioNippleArea; }
+            set
+            {
+                if (value == _visualizatioNippleArea) return;
+                _visualizatioNippleArea = value;
+                OnPropertyChanged(nameof(VisualizatioNippleArea));
+            }
+        }
+
+        public ObservableCollection<FocalFormation> FocalFormations
+        {
+            get { return _focalFormations; }
+            set
+            {
+                if (Equals(value, _focalFormations)) return;
+                _focalFormations = value;
+                OnPropertyChanged(nameof(FocalFormations));
+            }
+        }
+
         public ICommand SaveCommand { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -171,5 +249,10 @@ namespace USD
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class FocalFormation
+    {
+        public string Test { get; set; }
     }
 }

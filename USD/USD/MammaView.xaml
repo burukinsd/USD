@@ -161,28 +161,46 @@
                 </StackPanel>
 
                 <Label Grid.Column="0" Grid.Row="15">Протоки</Label>
-                <RadioButton Grid.Column="1" Grid.ColumnSpan="11"  Grid.Row="15" VerticalAlignment="Center" GroupName="Canals" IsChecked="True">не расширены</RadioButton>
+                <RadioButton Grid.Column="1" Grid.ColumnSpan="11"  Grid.Row="15" VerticalAlignment="Center" GroupName="Canals" IsChecked="{Binding IsCanalsExpanded, Mode=TwoWay, 
+                             Converter={StaticResource RadioButtonCheckedConverter},
+                             ConverterParameter={StaticResource False}}">не расширены</RadioButton>
                 <DockPanel Grid.Column="1" Grid.ColumnSpan="11" Grid.Row="16">
-                    <RadioButton GroupName="Canals" VerticalAlignment="Center" >расширены до</RadioButton>
-                    <TextBox IsEnabled="True" Margin="5,3"></TextBox>
+                    <RadioButton GroupName="Canals" VerticalAlignment="Center" IsChecked="{Binding IsCanalsExpanded, Mode=TwoWay, 
+                             Converter={StaticResource RadioButtonCheckedConverter},
+                             ConverterParameter={StaticResource True}}">расширены до</RadioButton>
+                    <TextBox IsEnabled="{Binding IsCanalsExpanded, Mode=OneWay}" Margin="5,3" Text="{Binding CanalsExpandingDesc, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
                 <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="17">Дифузные изменения:</Label>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="18" VerticalAlignment="Center" GroupName="DiffuseChanges" IsChecked="True">умеренные фиброзные изменения железистой ткани</RadioButton>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="19" VerticalAlignment="Center" GroupName="DiffuseChanges">выраженные фиброзные изменения железистой ткани</RadioButton>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="20" VerticalAlignment="Center" GroupName="DiffuseChanges">незначительные фиброзные изменения железистой ткани</RadioButton>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="21" VerticalAlignment="Center" GroupName="DiffuseChanges">нет</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="18" VerticalAlignment="Center" GroupName="DiffuseChanges" 
+                             IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Moderate}">
+                    умеренные дифузные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="19" VerticalAlignment="Center" GroupName="DiffuseChanges"
+                             IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Expressed}">
+                    выраженные дифузные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="20" VerticalAlignment="Center" GroupName="DiffuseChanges"
+                             IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Minor}">
+                    незначительные дифузные фиброзные изменения железистой ткани</RadioButton>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="21" VerticalAlignment="Center" GroupName="DiffuseChanges"
+                             IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=None}">
+                    нет</RadioButton>
                 <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="22">
                     <Label>Особенности</Label>
-                    <TextBox Margin="5,3" TextWrapping="WrapWithOverflow"></TextBox>
+                    <TextBox Margin="5,3" TextWrapping="WrapWithOverflow" Text="{Binding DiffuseChangesFeatures, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
                 <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="23">
                     <Label>Визуализация позадисосковой области:</Label>
                     <StackPanel Orientation="Vertical" Margin="0,7,0,0">
-                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center" IsChecked="True">хорошая</RadioButton>
-                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center">невозможная</RadioButton>
-                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center">только в косых проекциях</RadioButton>
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center"
+                                      IsChecked="{Binding VisualizatioNippleArea, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Good}">
+                            хорошая</RadioButton>
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center"
+                                      IsChecked="{Binding VisualizatioNippleArea, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Imposible}">
+                            невозможная</RadioButton>
+                        <RadioButton  GroupName="VizNippleArea" VerticalAlignment="Center"
+                                      IsChecked="{Binding VisualizatioNippleArea, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=ObliqueProjection}">
+                            только в косых проекциях</RadioButton>
                     </StackPanel>
                 </DockPanel>
 
@@ -197,15 +215,15 @@
                 <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="27">Очаговые образования (изменения):</Label>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="28" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="True">не выявляются</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="29" VerticalAlignment="Center" GroupName="FocalFormation">выявляются</RadioButton>
-                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="True">
-                    <DataGrid.Columns>
+                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="True" ItemsSource="{Binding FocalFormations, Mode=TwoWay}">
+                    <!--<DataGrid.Columns>
                         <DataGridTextColumn Header="№ п/п"></DataGridTextColumn>
                         <DataGridTextColumn Header="Локализация"></DataGridTextColumn>
                         <DataGridTextColumn Header="Размер, мм"></DataGridTextColumn>
                         <DataGridComboBoxColumn Header="Контуры"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Эхогенность"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Внутреняя структура"></DataGridComboBoxColumn>
-                    </DataGrid.Columns>
+                    </DataGrid.Columns>-->
                 </DataGrid>
 
                 <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="31">Региональные лифматические узлы (над-, подключичиные, подмышечные):</Label>
