@@ -1,12 +1,14 @@
-﻿using LiteDB;
+﻿using System.Collections.Generic;
+using LiteDB;
 
 namespace USD.DAL
 {
-    public interface ILiteDbWraper
+    public interface IDbWraper
     {
-        void Add<T>(T item) where T : new();
+        ObjectId Add<T>(T item) where T : new();
         T GetById<T>(ObjectId id) where T : new();
         void Delete<T>(ObjectId id) where T : new();
         void Update<T>(T item) where T : new();
+        IEnumerable<T> GetAll<T>() where T : new();
     }
 }

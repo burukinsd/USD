@@ -21,9 +21,11 @@ namespace USD
     /// </summary>
     public partial class MammaView : Window
     {
-        public MammaView()
+        public MammaView(MammaViewModels.MammaViewModel viewModel)
         {
             InitializeComponent();
+
+            DataContext = viewModel;
         }
 
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)

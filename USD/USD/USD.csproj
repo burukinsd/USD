@@ -36,9 +36,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>USD.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="LiteDB, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\packages\LiteDB.2.0.0-rc\lib\net40\LiteDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=3.1.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.1.2\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -61,21 +68,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DAL\ILiteDbWraper.cs" />
+    <Compile Include="DAL\IDbWraper.cs" />
     <Compile Include="DAL\IMammaRepository.cs" />
     <Compile Include="DAL\LiteDbWraper.cs" />
     <Compile Include="DAL\MammaRepository.cs" />
-    <Compile Include="MammaModel\DiffuseChanges.cs" />
-    <Compile Include="MammaModel\Echogenicity.cs" />
-    <Compile Include="MammaModel\MammaModel.cs" />
-    <Compile Include="MammaModel\MammaSpecialists.cs" />
-    <Compile Include="MammaModel\OutlinesType.cs" />
-    <Compile Include="MammaModel\PhisiologicalStatus.cs" />
-    <Compile Include="MammaModel\Structure.cs" />
-    <Compile Include="MammaModel\TissueRatio.cs" />
-    <Compile Include="MammaModel\VisualizatioNippleArea.cs" />
-    <Compile Include="MammaViewModel\FocalFormationViewModel.cs" />
-    <Compile Include="MammaViewModel\MammaViewModel.cs" />
+    <Compile Include="ListView.xaml.cs">
+      <DependentUpon>ListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListViewModel.cs" />
+    <Compile Include="MammaModels\DiffuseChanges.cs" />
+    <Compile Include="MammaModels\Echogenicity.cs" />
+    <Compile Include="MammaModels\FocalFormationModel.cs" />
+    <Compile Include="MammaModels\MammaModel.cs" />
+    <Compile Include="MammaModels\MammaSpecialists.cs" />
+    <Compile Include="MammaModels\OutlinesType.cs" />
+    <Compile Include="MammaModels\PhisiologicalStatus.cs" />
+    <Compile Include="MammaModels\Structure.cs" />
+    <Compile Include="MammaModels\TissueRatio.cs" />
+    <Compile Include="MammaModels\VisualizatioNippleArea.cs" />
+    <Compile Include="MammaViewModels\FocalFormationViewModel.cs" />
+    <Compile Include="MammaViewModels\MammaViewModel.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ViewTools\EnumBindingSourceExtension.cs" />
     <Compile Include="ViewTools\EnumBooleanConverter.cs" />
     <Compile Include="ViewTools\EnumDescriptionTypeConverter.cs" />
@@ -83,6 +96,10 @@
     <Compile Include="ViewTools\RadioButtonChecedConverter.cs" />
     <Compile Include="ViewTools\RelayCommand.cs" />
     <Compile Include="ViewTools\RowToIndexConverter.cs" />
+    <Page Include="ListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MammaView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

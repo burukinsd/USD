@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USD"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
-        xmlns:mammaModel="clr-namespace:USD.MammaModel"
         xmlns:viewTools="clr-namespace:USD.ViewTools"
+        xmlns:mammaModel="clr-namespace:USD.MammaModels"
         mc:Ignorable="d"
         Title="УЗД молочной железы" WindowState="Maximized"
         MinWidth="800" MinHeight="600"
@@ -273,9 +273,9 @@
             </Grid>
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
-            <Button IsEnabled="True" MinWidth="100" Margin="20,3" Command="{Binding SaveCommand}">Сохранить</Button>
+            <Button MinWidth="100" Margin="20,3" Command="{Binding SaveCommand}">Сохранить</Button>
             <Button IsEnabled="False" MinWidth="100" Margin="20,3">Экспорт в Word</Button>
-            <Button IsEnabled="False" MinWidth="100" Margin="20,3">База</Button>
+            <Button MinWidth="100" Margin="20,3" Command="{Binding GotoListCommand}">База</Button>
         </StackPanel>
     </Grid>
 </Window>

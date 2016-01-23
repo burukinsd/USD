@@ -1,4 +1,4 @@
-namespace USD.MammaModel
+namespace USD.MammaModels
 {
     public enum DiffuseChanges
     {

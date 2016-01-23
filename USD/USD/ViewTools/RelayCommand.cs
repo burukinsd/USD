@@ -5,9 +5,10 @@ namespace USD.ViewTools
 {
     class RelayCommand : ICommand
     {
-        public RelayCommand(Action<object> action)
+        public RelayCommand(Action<object> action, Predicate<object> canExecutePredicate = null)
         {
             ExecuteDelegate = action;
+            CanExecuteDelegate = canExecutePredicate;
         }
         public Predicate<object> CanExecuteDelegate { get; set; }
         public Action<object> ExecuteDelegate { get; set; }

@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using USD.ViewTools;
 
-namespace USD.MammaModel
+namespace USD.MammaModels
 {
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum Echogenicity

@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using USD.Annotations;
-using USD.MammaModel;
+using USD.MammaModels;
 
-namespace USD.MammaViewModel
+namespace USD.MammaViewModels
 {
     public class FocalFormationViewModel:INotifyPropertyChanged
     {
@@ -12,6 +12,16 @@ namespace USD.MammaViewModel
             Outlines = OutlinesType.SmothClear;
             Echogenicity = Echogenicity.Hypo;
             Structure = Structure.Homogenous;
+        }
+
+        public FocalFormationViewModel(FocalFormationModel model)
+        {
+            Localization = model.Localization;
+            Size = model.Size;
+            Outlines = model.Outlines;
+            Echogenicity = model.Echogenicity;
+            Structure = model.Structure;
+
         }
 
         private OutlinesType _outlines;

@@ -1,18 +1,99 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using LiteDB;
 using USD.Annotations;
-using USD.MammaModel;
+using USD.DAL;
+using USD.MammaModels;
 using USD.ViewTools;
 
-namespace USD.MammaViewModel
+namespace USD.MammaViewModels
 {
     public class MammaViewModel:INotifyPropertyChanged
     {
-        public MammaViewModel()
+        private readonly IMammaRepository _mammaRepository;
+
+        private MammaModel _model;
+
+        private bool _isChanged;
+        private DateTime _lastSaved = DateTime.Now;
+        private readonly BackgroundWorker _autoSaveBackgroundWorker;
+
+        public MammaViewModel(IMammaRepository mammaRepository)
         {
+            _mammaRepository = mammaRepository;
+
+            _autoSaveBackgroundWorker = new BackgroundWorker();
+            _autoSaveBackgroundWorker.DoWork += AutoSaveBackgroundWorkerOnDoWork;
+            _autoSaveBackgroundWorker.RunWorkerCompleted += (sender, args) => _lastSaved = DateTime.Now;
+
+            DefaultInitialize();
+            
+            InitializeCommand();
+        }
+
+        private void AutoSaveBackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            BaseSave();
+        }
+
+        public void ApplyModel(ObjectId id)
+        {
+            _model = _mammaRepository.GetById(id);
+
+            VisitDate = _model.VisitDate;
+            FIO = _model.FIO;
+            BirthYear = _model.BirthYear;
+            PhisiologicalStatus = _model.PhisiologicalStatus;
+            FirstDayOfLastMenstrualCycle = _model.FirstDayOfLastMenstrualCycle;
+            MenopauseText = _model.MenopauseText;
+            IsSkinChanged = _model.IsSkinChanged;
+            SkinChangedDesc = _model.SkinChangedDesc;
+            TissueRatio = _model.TissueRatio;
+            LeftThicknessGlandularLayer = _model.LeftThicknessGlandularLayer;
+            RightThicknessGlandularLayer = _model.RightThicknessGlandularLayer;
+            IsCanalsExpanded = _model.IsCanalsExpanded;
+            CanalsExpandingDesc = _model.CanalsExpandingDesc;
+            DiffuseChanges = _model.DiffuseChanges;
+            DiffuseChangesFeatures = _model.DiffuseChangesFeatures;
+            VisualizatioNippleArea = _model.VisualizatioNippleArea;
+            AreCysts = _model.AreCysts;
+            CystsDesc = _model.CystsDesc;
+            AreFocalFormations = _model.AreFocalFormations;
+            FocalFormations = new ObservableCollection<FocalFormationViewModel>(_model.FocalFormations.Select(x => new FocalFormationViewModel(x)));
+            IsDeterminateLymphNodes = _model.IsDeterminateLymphNodes;
+            AdditionalDesc = _model.AdditionalDesc;
+            IsNotPatalogyConclusion = _model.IsNotPatalogyConclusion;
+            IsCystsConclusion = _model.IsCystsConclusion;
+            CystConslusionDesc = _model.CystConslusionDesc;
+            IsInvolutionConclusion = _model.IsInvolutionConclusion;
+            IsSpecificConclusion = _model.IsSpecificConclusion;
+            SpecificConclusionDesc = _model.SpecificConclusionDesc;
+            MammaSpecialistsRecomendation = _model.Recomendation;
+        }
+
+        private void InitializeCommand()
+        {
+            SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged);
+            GotoListCommand = new RelayCommand(x => ShowList());
+        }
+
+        private void ShowList()
+        {
+            var listViewModel = new ListViewModel(_mammaRepository);
+            var listView = new ListView(listViewModel);
+            listView.Show();
+        }
+
+        public ICommand GotoListCommand { get; set; }
+
+        private void DefaultInitialize()
+        {
+            _model = new MammaModel();
             VisitDate = DateTime.Today;
             PhisiologicalStatus = PhisiologicalStatus.Normal;
             FirstDayOfLastMenstrualCycle = DateTime.Today;
@@ -28,21 +109,80 @@ namespace USD.MammaViewModel
             IsInvolutionConclusion = false;
             IsCystsConclusion = false;
             IsSpecificConclusion = false;
-
-
             FocalFormations = new ObservableCollection<FocalFormationViewModel>();
-
-            SaveCommand = new RelayCommand(x => Save());
         }
 
-        private void Save()
+        private void ManualSave()
         {
-            var a = 1;
+            BaseSave();
+
+            _lastSaved = DateTime.Now;
+            _isChanged = false;
         }
 
-        public MammaViewModel(MammaModel.MammaModel model)
+        private void BaseSave()
         {
-            throw new NotImplementedException();
+            ApplyChangesToModel();
+
+            if (_model.Id != null)
+            {
+                _mammaRepository.Update(_model);
+            }
+            else
+            {
+                _model.Id = _mammaRepository.Add(_model);
+            }
+        }
+
+        private void ApplyChangesToModel()
+        {
+            _model.VisitDate = VisitDate;
+            _model.FIO = FIO;
+            _model.BirthYear = BirthYear;
+            _model.PhisiologicalStatus = PhisiologicalStatus;
+            _model.FirstDayOfLastMenstrualCycle = FirstDayOfLastMenstrualCycle;
+            _model.MenopauseText = MenopauseText;
+            _model.IsSkinChanged = IsSkinChanged;
+            _model.SkinChangedDesc = SkinChangedDesc;
+            _model.TissueRatio = TissueRatio;
+            _model.LeftThicknessGlandularLayer = LeftThicknessGlandularLayer;
+            _model.RightThicknessGlandularLayer = RightThicknessGlandularLayer;
+            _model.IsCanalsExpanded = IsCanalsExpanded;
+            _model.CanalsExpandingDesc = CanalsExpandingDesc;
+            _model.DiffuseChanges = DiffuseChanges;
+            _model.DiffuseChangesFeatures = DiffuseChangesFeatures;
+            _model.VisualizatioNippleArea = VisualizatioNippleArea;
+            _model.AreCysts = AreCysts;
+            _model.CystsDesc = CystsDesc;
+            _model.AreFocalFormations = AreFocalFormations;
+
+            if (_model.FocalFormations == null)
+            {
+                _model.FocalFormations = new List<FocalFormationModel>();
+            }
+
+            _model.FocalFormations.Clear();
+            if (FocalFormations != null && FocalFormations.Any())
+            {
+                _model.FocalFormations.AddRange(FocalFormations.Select(x => new FocalFormationModel()
+                {
+                    Localization = x.Localization,
+                    Outlines = x.Outlines,
+                    Echogenicity = x.Echogenicity,
+                    Structure = x.Structure,
+                    Size = x.Size
+                }));
+            }
+
+            _model.IsDeterminateLymphNodes = IsDeterminateLymphNodes;
+            _model.AdditionalDesc = AdditionalDesc;
+            _model.IsNotPatalogyConclusion = IsNotPatalogyConclusion;
+            _model.IsCystsConclusion = IsCystsConclusion;
+            _model.CystConslusionDesc = CystConslusionDesc;
+            _model.IsInvolutionConclusion = IsInvolutionConclusion;
+            _model.IsSpecificConclusion = IsSpecificConclusion;
+            _model.SpecificConclusionDesc = SpecificConclusionDesc;
+            _model.Recomendation = MammaSpecialistsRecomendation;
         }
 
         private DateTime _visitDate;
@@ -75,6 +215,8 @@ namespace USD.MammaViewModel
         private bool _isSpecificConclusion;
         private string _specificConclusionDesc;
         private MammaSpecialists _mammaSpecialistsRecomendation;
+        
+
 
         public DateTime VisitDate
         {
@@ -413,6 +555,13 @@ namespace USD.MammaViewModel
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            _isChanged = true;
+
+            if ((DateTime.Now - _lastSaved).Seconds >= 10 && !_autoSaveBackgroundWorker.IsBusy)
+            {
+                _autoSaveBackgroundWorker.RunWorkerAsync();
+            }
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

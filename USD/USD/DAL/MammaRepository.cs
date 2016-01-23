@@ -1,27 +1,42 @@
-﻿using LiteDB;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LiteDB;
+using USD.MammaModels;
 
 namespace USD.DAL
 {
     class MammaRepository : IMammaRepository
     {
-        public void Add(MammaModel.MammaModel item)
+        private readonly IDbWraper _dbwraper;
+
+        public MammaRepository(IDbWraper dbwraper)
         {
-            throw new System.NotImplementedException();
+            _dbwraper = dbwraper;
         }
 
-        public MammaModel.MammaModel GetById(ObjectId id)
+        public ObjectId Add(MammaModel item)
         {
-            throw new System.NotImplementedException();
+            return _dbwraper.Add(item);
+        }
+
+        public MammaModel GetById(ObjectId id)
+        {
+            return _dbwraper.GetById<MammaModel>(id);
         }
 
         public void Delete(ObjectId id)
         {
-            throw new System.NotImplementedException();
+            _dbwraper.Delete<MammaModel>(id);
         }
 
-        public void Update(MammaModel.MammaModel item)
+        public void Update(MammaModel item)
         {
-            throw new System.NotImplementedException();
+            _dbwraper.Update(item);
+        }
+
+        public List<MammaModel> GetAll()
+        {
+            return _dbwraper.GetAll<MammaModel>().ToList();
         }
     }
 }
