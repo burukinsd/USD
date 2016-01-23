@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +23,24 @@ namespace USD
     {
         public MammaView()
         {
-            DataContext = new MammaViewModel();
             InitializeComponent();
+        }
+
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            if (e.Row.Item != CollectionView.NewItemPlaceholder)
+                e.Row.Header = (e.Row.GetIndex()+1).ToString();
+        }
+
+        private void DataGrid_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Lookup for the source to be DataGridCell
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid)sender;
+                grd.BeginEdit(e);
+            }
         }
     }
 }

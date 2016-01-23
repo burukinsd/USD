@@ -1,8 +1,7 @@
 using System;
-using System.Windows;
 using System.Windows.Data;
 
-namespace USD
+namespace USD.ViewTools
 {
     public class RadioButtonChecedConverter : IValueConverter
     {

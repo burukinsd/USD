@@ -3,10 +3,11 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using System.Windows.Media;
 using USD.Annotations;
+using USD.MammaModel;
+using USD.ViewTools;
 
-namespace USD
+namespace USD.MammaViewModel
 {
     public class MammaViewModel:INotifyPropertyChanged
     {
@@ -20,7 +21,16 @@ namespace USD
             IsCanalsExpanded = false;
             DiffuseChanges = DiffuseChanges.Moderate;
             VisualizatioNippleArea = VisualizatioNippleArea.Good;
-            FocalFormations = new ObservableCollection<FocalFormation> {new FocalFormation() {Test = "Test"}};
+            AreCysts = false;
+            AreFocalFormations = false;
+            IsDeterminateLymphNodes = false;
+            IsNotPatalogyConclusion = true;
+            IsInvolutionConclusion = false;
+            IsCystsConclusion = false;
+            IsSpecificConclusion = false;
+
+
+            FocalFormations = new ObservableCollection<FocalFormationViewModel>();
 
             SaveCommand = new RelayCommand(x => Save());
         }
@@ -30,7 +40,7 @@ namespace USD
             var a = 1;
         }
 
-        public MammaViewModel(MammaModel model)
+        public MammaViewModel(MammaModel.MammaModel model)
         {
             throw new NotImplementedException();
         }
@@ -51,7 +61,20 @@ namespace USD
         private DiffuseChanges _diffuseChanges;
         private string _diffuseChangesFeatures;
         private VisualizatioNippleArea _visualizatioNippleArea;
-        private ObservableCollection<FocalFormation> _focalFormations;
+        private ObservableCollection<FocalFormationViewModel> _focalFormations;
+        private bool _areCysts;
+        private string _cystsDesc;
+        private bool _areFocalFormations;
+        private bool _isDeterminateLymphNodes;
+        private string _lymphNodesDesc;
+        private string _additionalDesc;
+        private bool _isNotPatalogyConclusion;
+        private bool _isCystsConclusion;
+        private string _cystConslusionDesc;
+        private bool _isInvolutionConclusion;
+        private bool _isSpecificConclusion;
+        private string _specificConclusionDesc;
+        private MammaSpecialists _mammaSpecialistsRecomendation;
 
         public DateTime VisitDate
         {
@@ -229,7 +252,40 @@ namespace USD
             }
         }
 
-        public ObservableCollection<FocalFormation> FocalFormations
+        public bool AreCysts
+        {
+            get { return _areCysts; }
+            set
+            {
+                if (value == _areCysts) return;
+                _areCysts = value;
+                OnPropertyChanged(nameof(AreCysts));
+            }
+        }
+
+        public string CystsDesc
+        {
+            get { return _cystsDesc; }
+            set
+            {
+                if (value == _cystsDesc) return;
+                _cystsDesc = value;
+                OnPropertyChanged(nameof(CystsDesc));
+            }
+        }
+
+        public bool AreFocalFormations
+        {
+            get { return _areFocalFormations; }
+            set
+            {
+                if (value == _areFocalFormations) return;
+                _areFocalFormations = value;
+                OnPropertyChanged(nameof(AreFocalFormations));
+            }
+        }
+
+        public ObservableCollection<FocalFormationViewModel> FocalFormations
         {
             get { return _focalFormations; }
             set
@@ -237,6 +293,116 @@ namespace USD
                 if (Equals(value, _focalFormations)) return;
                 _focalFormations = value;
                 OnPropertyChanged(nameof(FocalFormations));
+            }
+        }
+
+        public bool IsDeterminateLymphNodes
+        {
+            get { return _isDeterminateLymphNodes; }
+            set
+            {
+                if (value == _isDeterminateLymphNodes) return;
+                _isDeterminateLymphNodes = value;
+                OnPropertyChanged(nameof(IsDeterminateLymphNodes));
+            }
+        }
+
+        public string LymphNodesDesc
+        {
+            get { return _lymphNodesDesc; }
+            set
+            {
+                if (value == _lymphNodesDesc) return;
+                _lymphNodesDesc = value;
+                OnPropertyChanged(nameof(LymphNodesDesc));
+            }
+        }
+
+        public string AdditionalDesc
+        {
+            get { return _additionalDesc; }
+            set
+            {
+                if (value == _additionalDesc) return;
+                _additionalDesc = value;
+                OnPropertyChanged(nameof(AdditionalDesc));
+            }
+        }
+
+        public bool IsNotPatalogyConclusion
+        {
+            get { return _isNotPatalogyConclusion; }
+            set
+            {
+                if (value == _isNotPatalogyConclusion) return;
+                _isNotPatalogyConclusion = value;
+                OnPropertyChanged(nameof(IsNotPatalogyConclusion));
+            }
+        }
+
+        public bool IsCystsConclusion
+        {
+            get { return _isCystsConclusion; }
+            set
+            {
+                if (value == _isCystsConclusion) return;
+                _isCystsConclusion = value;
+                OnPropertyChanged(nameof(IsCystsConclusion));
+            }
+        }
+
+        public string CystConslusionDesc
+        {
+            get { return _cystConslusionDesc; }
+            set
+            {
+                if (value == _cystConslusionDesc) return;
+                _cystConslusionDesc = value;
+                OnPropertyChanged(nameof(CystConslusionDesc));
+            }
+        }
+
+        public bool IsInvolutionConclusion
+        {
+            get { return _isInvolutionConclusion; }
+            set
+            {
+                if (value == _isInvolutionConclusion) return;
+                _isInvolutionConclusion = value;
+                OnPropertyChanged(nameof(IsInvolutionConclusion));
+            }
+        }
+
+        public bool IsSpecificConclusion
+        {
+            get { return _isSpecificConclusion; }
+            set
+            {
+                if (value == _isSpecificConclusion) return;
+                _isSpecificConclusion = value;
+                OnPropertyChanged(nameof(IsSpecificConclusion));
+            }
+        }
+
+        public string SpecificConclusionDesc
+        {
+            get { return _specificConclusionDesc; }
+            set
+            {
+                if (value == _specificConclusionDesc) return;
+                _specificConclusionDesc = value;
+                OnPropertyChanged(nameof(SpecificConclusionDesc));
+            }
+        }
+
+        public MammaSpecialists MammaSpecialistsRecomendation
+        {
+            get { return _mammaSpecialistsRecomendation; }
+            set
+            {
+                if (value == _mammaSpecialistsRecomendation) return;
+                _mammaSpecialistsRecomendation = value;
+                OnPropertyChanged(nameof(MammaSpecialistsRecomendation));
             }
         }
 
@@ -249,10 +415,5 @@ namespace USD
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public class FocalFormation
-    {
-        public string Test { get; set; }
     }
 }

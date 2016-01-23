@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LiteDB, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.2.0.0-rc\lib\net40\LiteDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -57,14 +61,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DiffuseChanges.cs" />
-    <Compile Include="EnumBooleanConverter.cs" />
-    <Compile Include="InverseBooleanConverter.cs" />
-    <Compile Include="PhisiologicalStatus.cs" />
-    <Compile Include="RadioButtonChecedConverter.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="TissueRatio.cs" />
-    <Compile Include="VisualizatioNippleArea.cs" />
+    <Compile Include="DAL\ILiteDbWraper.cs" />
+    <Compile Include="DAL\IMammaRepository.cs" />
+    <Compile Include="DAL\LiteDbWraper.cs" />
+    <Compile Include="DAL\MammaRepository.cs" />
+    <Compile Include="MammaModel\DiffuseChanges.cs" />
+    <Compile Include="MammaModel\Echogenicity.cs" />
+    <Compile Include="MammaModel\MammaModel.cs" />
+    <Compile Include="MammaModel\MammaSpecialists.cs" />
+    <Compile Include="MammaModel\OutlinesType.cs" />
+    <Compile Include="MammaModel\PhisiologicalStatus.cs" />
+    <Compile Include="MammaModel\Structure.cs" />
+    <Compile Include="MammaModel\TissueRatio.cs" />
+    <Compile Include="MammaModel\VisualizatioNippleArea.cs" />
+    <Compile Include="MammaViewModel\FocalFormationViewModel.cs" />
+    <Compile Include="MammaViewModel\MammaViewModel.cs" />
+    <Compile Include="ViewTools\EnumBindingSourceExtension.cs" />
+    <Compile Include="ViewTools\EnumBooleanConverter.cs" />
+    <Compile Include="ViewTools\EnumDescriptionTypeConverter.cs" />
+    <Compile Include="ViewTools\InverseBooleanConverter.cs" />
+    <Compile Include="ViewTools\RadioButtonChecedConverter.cs" />
+    <Compile Include="ViewTools\RelayCommand.cs" />
+    <Compile Include="ViewTools\RowToIndexConverter.cs" />
     <Page Include="MammaView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,14 +91,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MammaModel.cs" />
     <Compile Include="MammaView.xaml.cs">
       <DependentUpon>MammaView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MammaViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -99,6 +115,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

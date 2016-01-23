@@ -1,8 +1,7 @@
 using System;
-using System.Windows;
 using System.Windows.Data;
 
-namespace USD
+namespace USD.ViewTools
 {
     [ValueConversion(typeof(bool), typeof(bool))]
     public class InverseBooleanConverter : IValueConverter

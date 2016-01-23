@@ -1,4 +1,4 @@
-﻿namespace USD
+﻿namespace USD.MammaModel
 {
     public enum PhisiologicalStatus
     {
