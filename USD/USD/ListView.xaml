@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:USD"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Список исследований" MinWidth="800" MinHeight="600"
         Background="#EFECEC">
@@ -23,12 +24,18 @@
                 </TextBox.Text>
             </TextBox>
         </DockPanel>
-        <DataGrid Grid.Row="1" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False" CanUserSortColumns="True" ItemsSource="{Binding List}" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False" CanUserSortColumns="True" ItemsSource="{Binding List}" AutoGenerateColumns="False" RowHeight="{x:Static sys:Double.NaN}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Дата визита" Binding="{Binding VisitDate}"></DataGridTextColumn>
                 <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Год рождения" Binding="{Binding BirthYear}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Заключение" Binding="{Binding Conclusion}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Заключение">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Conclusion}" TextWrapping="Wrap"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

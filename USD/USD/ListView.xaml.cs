@@ -19,7 +19,7 @@ namespace USD
     /// </summary>
     public partial class ListView : Window
     {
-        public ListView(ListViewModel viewModel)
+        public ListView(ListViewModel.ListViewModel viewModel)
         {
             InitializeComponent();
 

@@ -146,10 +146,10 @@
                     достаточно железистой и много жировой (подкожной и в центральном отделе);</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="11" VerticalAlignment="Center" GroupName="Tissue"
                              IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=LessGlandular}">
-                    мало железистой в виде единичных включений между жировой клетчаткой</RadioButton>
+                    мало железистой в виде единичных включений между жировой клетчаткой;</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="12" VerticalAlignment="Center" GroupName="Tissue"
                              IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=MoreAdipose}">
-                    много жировой (подкожной, в центральнх, задних отделах)</RadioButton>
+                    много жировой (подкожной, в центральнх, задних отделах).</RadioButton>
 
                 <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="13">Толщина железистого слоя:</Label>
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="14">
@@ -172,16 +172,16 @@
                     <TextBox IsEnabled="{Binding IsCanalsExpanded, Mode=OneWay}" Margin="5,3" Text="{Binding CanalsExpandingDesc, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="17">Дифузные изменения:</Label>
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="17">Диффузные изменения:</Label>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="18" VerticalAlignment="Center" GroupName="DiffuseChanges" 
                              IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Moderate}">
-                    умеренные дифузные фиброзные изменения железистой ткани</RadioButton>
+                    умеренные диффузные фиброзные изменения железистой ткани</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="19" VerticalAlignment="Center" GroupName="DiffuseChanges"
                              IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Expressed}">
-                    выраженные дифузные фиброзные изменения железистой ткани</RadioButton>
+                    выраженные диффузные фиброзные изменения железистой ткани</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="20" VerticalAlignment="Center" GroupName="DiffuseChanges"
                              IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Minor}">
-                    незначительные дифузные фиброзные изменения железистой ткани</RadioButton>
+                    незначительные диффузные фиброзные изменения железистой ткани</RadioButton>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="21" VerticalAlignment="Center" GroupName="DiffuseChanges"
                              IsChecked="{Binding DiffuseChanges, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=None}">
                     нет</RadioButton>
@@ -227,7 +227,7 @@
                 <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="True" AutoGenerateColumns="False"
                            IsEnabled="{Binding AreFocalFormations, Mode=OneWay}"
                           ItemsSource="{Binding FocalFormations, Mode=TwoWay}" LoadingRow="DataGrid_LoadingRow" DataGridCell.Selected="DataGrid_GotFocus"
-                          ColumnWidth="*">
+                          ColumnWidth="*" VerticalScrollBarVisibility="Visible" MaxHeight="112">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Локализация" Width="45*" Binding="{Binding Localization}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Размер, мм" Width="10*" Binding="{Binding Size}"></DataGridTextColumn>
@@ -274,7 +274,7 @@
         </ScrollViewer>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
             <Button MinWidth="100" Margin="20,3" Command="{Binding SaveCommand}">Сохранить</Button>
-            <Button IsEnabled="False" MinWidth="100" Margin="20,3">Экспорт в Word</Button>
+            <Button MinWidth="100" Margin="20,3" Command="{Binding ExportCommand}">Экспорт в Word</Button>
             <Button MinWidth="100" Margin="20,3" Command="{Binding GotoListCommand}">База</Button>
         </StackPanel>
     </Grid>

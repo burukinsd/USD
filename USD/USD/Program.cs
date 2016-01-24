@@ -26,7 +26,7 @@ namespace USD
             container.Register<MammaView>();
             container.Register<ListView>();
             container.Register<MammaViewModel>();
-            container.Register<ListViewModel>();
+            container.Register<ListViewModel.ListViewModel>();
 
             container.Verify();
 

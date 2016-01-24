@@ -40,6 +40,10 @@
     <StartupObject>USD.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocX, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.1.0.0.19\lib\net40\DocX.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LiteDB, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\packages\LiteDB.2.0.0-rc\lib\net40\LiteDB.dll</HintPath>
       <Private>True</Private>
@@ -75,7 +79,9 @@
     <Compile Include="ListView.xaml.cs">
       <DependentUpon>ListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListViewModel.cs" />
+    <Compile Include="ListViewModel\ItemListViewModel.cs" />
+    <Compile Include="ListViewModel\ListViewModel.cs" />
+    <Compile Include="MammaModels\ConclusionMaker.cs" />
     <Compile Include="MammaModels\DiffuseChanges.cs" />
     <Compile Include="MammaModels\Echogenicity.cs" />
     <Compile Include="MammaModels\FocalFormationModel.cs" />
@@ -96,6 +102,7 @@
     <Compile Include="ViewTools\RadioButtonChecedConverter.cs" />
     <Compile Include="ViewTools\RelayCommand.cs" />
     <Compile Include="ViewTools\RowToIndexConverter.cs" />
+    <Compile Include="WordExport\MammaExporter.cs" />
     <Page Include="ListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +145,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Content Include="Templates\MammaTemplate.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

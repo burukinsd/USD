@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,6 +11,7 @@ using USD.Annotations;
 using USD.DAL;
 using USD.MammaModels;
 using USD.ViewTools;
+using USD.WordExport;
 
 namespace USD.MammaViewModels
 {
@@ -65,6 +67,7 @@ namespace USD.MammaViewModels
             CystsDesc = _model.CystsDesc;
             AreFocalFormations = _model.AreFocalFormations;
             FocalFormations = new ObservableCollection<FocalFormationViewModel>(_model.FocalFormations.Select(x => new FocalFormationViewModel(x)));
+            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
             IsDeterminateLymphNodes = _model.IsDeterminateLymphNodes;
             AdditionalDesc = _model.AdditionalDesc;
             IsNotPatalogyConclusion = _model.IsNotPatalogyConclusion;
@@ -80,11 +83,23 @@ namespace USD.MammaViewModels
         {
             SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged);
             GotoListCommand = new RelayCommand(x => ShowList());
+            ExportCommand = new RelayCommand(x => Export());
         }
+
+        private void Export()
+        {
+            if (_isChanged)
+            {
+                ManualSave();
+            }
+            MammaExporter.Export(_model);
+        }
+
+        public ICommand ExportCommand { get; set; }
 
         private void ShowList()
         {
-            var listViewModel = new ListViewModel(_mammaRepository);
+            var listViewModel = new ListViewModel.ListViewModel(_mammaRepository);
             var listView = new ListView(listViewModel);
             listView.Show();
         }
@@ -110,7 +125,32 @@ namespace USD.MammaViewModels
             IsCystsConclusion = false;
             IsSpecificConclusion = false;
             FocalFormations = new ObservableCollection<FocalFormationViewModel>();
+            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
         }
+
+        private void FocalFormationsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged += FocalFormationChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged -= FocalFormationChanged;
+                }
+            }
+        }
+
+        private void FocalFormationChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FocalFormations));
+        }
+
 
         private void ManualSave()
         {

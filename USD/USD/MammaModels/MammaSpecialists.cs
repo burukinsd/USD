@@ -8,13 +8,13 @@ namespace USD.MammaModels
     {
         [Description(" ")]
         None,
-        [Description("маммолог")]
+        [Description("маммолога")]
         Mammalogist,
-        [Description("онколог")]
+        [Description("онколога")]
         Oncologist,
-        [Description("гинеколог")]
+        [Description("гинеколога")]
         Gynecologist,
-        [Description("хирург")]
+        [Description("хирурга")]
         Surgeoт
     }
 }
