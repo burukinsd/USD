@@ -113,7 +113,7 @@ namespace USD.MammaViewModels
             PhisiologicalStatus = PhisiologicalStatus.Normal;
             FirstDayOfLastMenstrualCycle = DateTime.Today;
             IsSkinChanged = false;
-            TissueRatio = TissueRatio.EnoughGlandularMoreAdipose;
+            TissueRatio = TissueRatio.EnoughAll;
             IsCanalsExpanded = false;
             DiffuseChanges = DiffuseChanges.Moderate;
             VisualizatioNippleArea = VisualizatioNippleArea.Good;

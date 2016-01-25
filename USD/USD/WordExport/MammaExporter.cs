@@ -180,6 +180,9 @@ namespace USD.WordExport
                 case TissueRatio.MoreAdipose:
                     builder.Append("много жировой (подкожной, в центральнх, задних отделах).");
                     break;
+                case TissueRatio.EnoughAll:
+                    builder.Append("достаточно железистой и жировой.");
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -222,7 +225,7 @@ namespace USD.WordExport
             switch (model.PhisiologicalStatus)
             {
                 case PhisiologicalStatus.Normal:
-                    builder.Append("1-й день менстурального цикла: ");
+                    builder.Append("1-й день последней менстуруации: ");
                     builder.Append(model.FirstDayOfLastMenstrualCycle.ToShortDateString());
                     break;
                 case PhisiologicalStatus.Pregant:
