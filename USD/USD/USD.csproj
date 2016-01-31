@@ -94,6 +94,7 @@
     <Compile Include="MammaModels\VisualizatioNippleArea.cs" />
     <Compile Include="MammaViewModels\FocalFormationViewModel.cs" />
     <Compile Include="MammaViewModels\MammaViewModel.cs" />
+    <Compile Include="ContainerFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ViewTools\EnumBindingSourceExtension.cs" />
     <Compile Include="ViewTools\EnumBooleanConverter.cs" />

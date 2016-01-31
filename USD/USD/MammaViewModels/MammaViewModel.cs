@@ -36,6 +36,8 @@ namespace USD.MammaViewModels
             DefaultInitialize();
             
             InitializeCommand();
+
+            _isChanged = false;
         }
 
         private void AutoSaveBackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
@@ -58,6 +60,7 @@ namespace USD.MammaViewModels
             TissueRatio = _model.TissueRatio;
             LeftThicknessGlandularLayer = _model.LeftThicknessGlandularLayer;
             RightThicknessGlandularLayer = _model.RightThicknessGlandularLayer;
+            ActualToPhase = _model.ActualToPhase;
             IsCanalsExpanded = _model.IsCanalsExpanded;
             CanalsExpandingDesc = _model.CanalsExpandingDesc;
             DiffuseChanges = _model.DiffuseChanges;
@@ -77,6 +80,8 @@ namespace USD.MammaViewModels
             IsSpecificConclusion = _model.IsSpecificConclusion;
             SpecificConclusionDesc = _model.SpecificConclusionDesc;
             MammaSpecialistsRecomendation = _model.Recomendation;
+
+            _isChanged = false;
         }
 
         private void InitializeCommand()
@@ -84,7 +89,42 @@ namespace USD.MammaViewModels
             SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged);
             GotoListCommand = new RelayCommand(x => ShowList());
             ExportCommand = new RelayCommand(x => Export());
+
+            AddFFCommnad = new RelayCommand(x => AddFocalFormation(), x => AreFocalFormations);
+            DeleteFFComand = new RelayCommand(x => DeleteFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
+            CopyFFComand = new RelayCommand(x => CopyFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
         }
+
+        private void CopyFocalFormation()
+        {
+            var newFocalFormation = new FocalFormationViewModel()
+            {
+                Localization = SelectedFocalFormation.Localization,
+                Structure = SelectedFocalFormation.Structure,
+                Outlines = SelectedFocalFormation.Outlines,
+                Echogenicity = SelectedFocalFormation.Echogenicity,
+                Size = SelectedFocalFormation.Size
+            };
+            FocalFormations.Add(newFocalFormation);
+        }
+
+        public ICommand CopyFFComand { get; set; }
+
+        private void DeleteFocalFormation()
+        {
+            var index = FocalFormations.IndexOf(SelectedFocalFormation);
+            FocalFormations.Remove(SelectedFocalFormation);
+            SelectedFocalFormation = FocalFormations[index < FocalFormations.Count ? index : 0];
+        }
+
+        public ICommand DeleteFFComand { get; set; }
+
+        private void AddFocalFormation()
+        {
+            FocalFormations.Add(new FocalFormationViewModel());
+        }
+
+        public ICommand AddFFCommnad { get; set; }
 
         private void Export()
         {
@@ -114,6 +154,7 @@ namespace USD.MammaViewModels
             FirstDayOfLastMenstrualCycle = DateTime.Today;
             IsSkinChanged = false;
             TissueRatio = TissueRatio.EnoughAll;
+            ActualToPhase = true;
             IsCanalsExpanded = false;
             DiffuseChanges = DiffuseChanges.Moderate;
             VisualizatioNippleArea = VisualizatioNippleArea.Good;
@@ -187,6 +228,7 @@ namespace USD.MammaViewModels
             _model.TissueRatio = TissueRatio;
             _model.LeftThicknessGlandularLayer = LeftThicknessGlandularLayer;
             _model.RightThicknessGlandularLayer = RightThicknessGlandularLayer;
+            _model.ActualToPhase = ActualToPhase;
             _model.IsCanalsExpanded = IsCanalsExpanded;
             _model.CanalsExpandingDesc = CanalsExpandingDesc;
             _model.DiffuseChanges = DiffuseChanges;
@@ -255,7 +297,8 @@ namespace USD.MammaViewModels
         private bool _isSpecificConclusion;
         private string _specificConclusionDesc;
         private MammaSpecialists _mammaSpecialistsRecomendation;
-        
+        private FocalFormationViewModel _selectedFocalFormation;
+        private bool _actualToPhase;
 
 
         public DateTime VisitDate
@@ -298,6 +341,7 @@ namespace USD.MammaViewModels
             {
                 if (value == _phisiologicalStatus) return;
                 _phisiologicalStatus = value;
+                ActualToPhase = _phisiologicalStatus == PhisiologicalStatus.Normal;
                 OnPropertyChanged(nameof(PhisiologicalStatus));
             }
         }
@@ -376,6 +420,17 @@ namespace USD.MammaViewModels
                 if (value == _rightThicknessGlandularLayer) return;
                 _rightThicknessGlandularLayer = value;
                 OnPropertyChanged(nameof(RightThicknessGlandularLayer));
+            }
+        }
+
+        public bool ActualToPhase
+        {
+            get { return _actualToPhase; }
+            set
+            {
+                if (value == _actualToPhase) return;
+                _actualToPhase = value;
+                OnPropertyChanged(nameof(ActualToPhase));
             }
         }
 
@@ -475,6 +530,17 @@ namespace USD.MammaViewModels
                 if (Equals(value, _focalFormations)) return;
                 _focalFormations = value;
                 OnPropertyChanged(nameof(FocalFormations));
+            }
+        }
+
+        public FocalFormationViewModel SelectedFocalFormation
+        {
+            get { return _selectedFocalFormation; }
+            set
+            {
+                if (Equals(value, _selectedFocalFormation)) return;
+                _selectedFocalFormation = value;
+                OnPropertyChanged(nameof(SelectedFocalFormation));
             }
         }
 

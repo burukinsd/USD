@@ -44,5 +44,62 @@ namespace USD
                 grd.BeginEdit(e);
             }
         }
+
+        private void NewPacient_OnClick(object sender, RoutedEventArgs e)
+        {
+            var viewModel = DataContext as MammaViewModels.MammaViewModel;
+            if (viewModel != null && viewModel.SaveCommand.CanExecute(null))
+            {
+                var dialogResult = MessageBox.Show("Есть несохраненные изменения. Сохранить их?", "УЗД молочной железы",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Yes);
+                switch (dialogResult)
+                {
+                    case MessageBoxResult.Yes:
+                        viewModel.SaveCommand.Execute(null);
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+            else
+            {
+                var dialogResult = MessageBox.Show("Вы уверны, что хотите начать прием нового пациента?", "УЗД молочной железы",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
+                if (dialogResult == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+
+            DataContext = ContainerFactory.Get<MammaViewModels.MammaViewModel>();
+        }
+
+        private void MammaView_OnClosing(object sender, CancelEventArgs e)
+        {
+            var viewModel = DataContext as MammaViewModels.MammaViewModel;
+            if (viewModel != null && viewModel.SaveCommand.CanExecute(null))
+            {
+                var dialogResult = MessageBox.Show("Есть несохраненные изменения. Сохранить их?", "УЗД молочной железы",
+                    MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Yes);
+                switch (dialogResult)
+                {
+                    case MessageBoxResult.Yes:
+                        viewModel.SaveCommand.Execute(null);
+                        break;
+                    case MessageBoxResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
+            else
+            {
+                var dialogResult = MessageBox.Show("Вы уверны, что хотите выйти?", "УЗД молочной железы",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
+                if (dialogResult == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@
     <Grid Margin="30,0,15,0">
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+            <RowDefinition MaxHeight="42" MinHeight="42"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -24,15 +25,20 @@
                 </TextBox.Text>
             </TextBox>
         </DockPanel>
-        <DataGrid Grid.Row="1" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False" CanUserSortColumns="True" ItemsSource="{Binding List}" AutoGenerateColumns="False" RowHeight="{x:Static sys:Double.NaN}">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button MinWidth="100" Margin="10,3" Command="{Binding ExportCommand}">Открыть в Word</Button>
+            <Button MinWidth="100" Margin="10,3" Command="{Binding DeleteCommand}">Удалить</Button>
+        </StackPanel>
+        <DataGrid Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False" CanUserSortColumns="True" CanUserResizeRows="True"
+                  ItemsSource="{Binding List}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Hidden" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата визита" Binding="{Binding VisitDate}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Дата визита" Binding="{Binding VisitDate, StringFormat={}{0:dd.MM.yyyy}}"></DataGridTextColumn>
                 <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Год рождения" Binding="{Binding BirthYear}"></DataGridTextColumn>
-                <DataGridTemplateColumn Header="Заключение">
+                <DataGridTemplateColumn Header="Заключение" Width="100*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Conclusion}" TextWrapping="Wrap"></TextBlock>
+                            <TextBlock Text="{Binding Conclusion}" TextWrapping="WrapWithOverflow" VerticalAlignment="Center"></TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

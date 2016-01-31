@@ -26,7 +26,7 @@ namespace USD.MammaViewModels
 
         private OutlinesType _outlines;
         private string _localization;
-        private decimal? _size;
+        private string _size;
         private Echogenicity _echogenicity;
         private Structure _structure;
 
@@ -41,7 +41,7 @@ namespace USD.MammaViewModels
             }
         }
 
-        public decimal? Size
+        public string Size
         {
             get { return _size; }
             set

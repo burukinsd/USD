@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using LiteDB;
 using USD.Annotations;
 using USD.MammaModels;
+using USD.WordExport;
 
 namespace USD.ListViewModel
 {
@@ -12,6 +14,7 @@ namespace USD.ListViewModel
         private string _birthYear;
         private string _fio;
         private DateTime _visitDate;
+        private readonly MammaModel _model;
 
         public ItemListViewModel(MammaModel mammaModel)
         {
@@ -19,6 +22,8 @@ namespace USD.ListViewModel
             FIO = mammaModel.FIO;
             BirthYear = mammaModel.BirthYear;
             Conclusion = ConclusionMaker.MakeConclusion(mammaModel);
+            Id = mammaModel.Id;
+            _model = mammaModel;
         }
 
         public string Conclusion
@@ -65,12 +70,19 @@ namespace USD.ListViewModel
             }
         }
 
+        public ObjectId Id { get; private set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Export()
+        {
+            MammaExporter.Export(_model);
         }
     }
 }
