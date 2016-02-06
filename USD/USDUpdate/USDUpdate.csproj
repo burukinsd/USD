@@ -144,16 +144,16 @@
     <Content Include="Install\USD.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Install\Application Files\USD_1_0_0_7\2-512.ico.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\DocX.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\LiteDB.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\Newtonsoft.Json.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\SimpleInjector.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\Templates\MammaTemplate.docx.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\USD.application" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.config.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.manifest" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\2-512.ico.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\DocX.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\LiteDB.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\Newtonsoft.Json.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\SimpleInjector.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\Templates\MammaTemplate.docx.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\USD.application" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.config.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.manifest" />
     <None Include="Properties\PublishProfiles\USDUpdate - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

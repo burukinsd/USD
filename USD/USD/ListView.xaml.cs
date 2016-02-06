@@ -66,7 +66,6 @@ namespace USD
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NullReferenceException();
             var saveFileDialog = new SaveFileDialog() {Filter = "Файлы БД (*.db)|*.db" };
             if (saveFileDialog.ShowDialog() == true)
             {
