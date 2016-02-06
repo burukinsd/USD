@@ -15,7 +15,7 @@ namespace USD.WordExport
     {
         public static void Export(MammaModel model)
         {
-            var directoryFullPath = EnsureDirectory();
+            var directoryFullPath = ExportDirectoryCreator.EnsureDirectory();
 
             var fileFullPath =
                 $"{directoryFullPath}\\{model.VisitDate.ToShortDateString()} {model.FIO} {model.BirthYear}.docx";
@@ -60,16 +60,6 @@ namespace USD.WordExport
             }
 
             Process.Start(fileFullPath);
-        }
-
-        private static string EnsureDirectory()
-        {
-            var direc = new DirectoryInfo("Узи молочной железы");
-            if (!direc.Exists)
-            {
-                direc.Create();
-            }
-            return direc.FullName;
         }
 
         private static string MakeLymphNodes(MammaModel model)

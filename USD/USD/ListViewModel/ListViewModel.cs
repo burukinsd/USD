@@ -60,7 +60,7 @@ namespace USD.ListViewModel
 
         public ICommand DeleteCommand { get; set; }
 
-        private void LoadData()
+        public void LoadData()
         {
             _screaningList = _mammaRepository.GetAll().Select(x => new ItemListViewModel(x)).ToList();
 

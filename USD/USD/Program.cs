@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Windows;
 using LiteDB;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using SimpleInjector;
 using USD.DAL;
 using USD.MammaViewModels;
 using USD.Properties;
+using USD.WordExport;
 
 namespace USD
 {
@@ -14,13 +21,41 @@ namespace USD
         [STAThread]
         static void Main()
         {
+            EnsureDbFile();
             DbMigration();
+
+            ExportDirectoryCreator.EnsureDirectory();
 
             var container = Bootstrap();
 
             // Any additional other configuration, e.g. of your desired MVVM toolkit.
             ContainerFactory.Initialize(container);
             RunApplication(container);
+        }
+
+        private static void EnsureDbFile()
+        {
+            if (!File.Exists(Settings.Default.LiteDbFileName))
+            {
+                var dialogResult =
+                    MessageBox.Show(
+                        "База данных не найдена. Вы хотите указать имеющийся файл базы дынных? Иначе будет создана новая база.",
+                        "УЗД", MessageBoxButton.YesNo,
+                        MessageBoxImage.Question, MessageBoxResult.Yes);
+                if (dialogResult == MessageBoxResult.Yes)
+                {
+                    var openFileDialog = new OpenFileDialog
+                    {
+                        Filter = "Файлы БД программы (USD.db)|USD.db|Все файлы БД (*.db)|*.db|Все файлы (*.*)|*.*"
+                    };
+                    if (openFileDialog.ShowDialog() == true)
+                    {
+                        File.Copy(openFileDialog.FileName, Settings.Default.LiteDbFileName);
+                        MessageBox.Show("Файл база данных успешно скопирован.", "УЗД", MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                    }
+                }
+            }
         }
 
         private static void DbMigration()
@@ -82,7 +117,29 @@ namespace USD
             }
             catch (Exception ex)
             {
-                //Log the exception and exit
+                MailMessage mail = new MailMessage
+                {
+                    From = new MailAddress("usd@burukinsd.ru", "УЗД ошибка"),
+                    Subject = "Ошибка в программе УЗИ.",
+                    SubjectEncoding = System.Text.Encoding.UTF8,
+                    BodyEncoding = System.Text.Encoding.UTF8,
+                    IsBodyHtml = false,
+                    Body = JsonConvert.SerializeObject(ex),
+                    Priority = MailPriority.High
+                };
+                mail.Attachments.Add(new Attachment(Settings.Default.LiteDbFileName));
+                mail.To.Add("burukinsd@gmail.com");
+                using (SmtpClient client = new SmtpClient()
+                {
+                    Host = "smtp.yandex.ru",
+                    Port = 587,
+                    EnableSsl = true,
+                    Credentials = new NetworkCredential("usd@burukinsd.ru", "191613")
+                })
+                {
+                    client.Send(mail);
+                }
+                throw;
             }
         }
     }

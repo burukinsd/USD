@@ -2,30 +2,25 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<ol style="margin-top: 30px">
+    <li>Перейти по ссылке <a href="http://usdupdate.azurewebsites.net/install/publish.htm">http://usdupdate.azurewebsites.net/install/publish.htm</a></li>
+    <li>На открвшейся странице нажать на кнопку Install. <img src="~/Content/InstructionImages/install.png"/></li>
+    <li>Согласится на загрузку и запустить загруженный файл.</li>
+    <li>Елсли просит что-то установить - со всем соглашаемся.</li>
+    <li>Дожидаемся этого окна. И жмем Install. <img src="~/Content/InstructionImages/install_window.png"/> </li>
+    <li>После установки приложение сразу же запустится и спросит про базу. Отвечаем "Да." <img src="~/Content/InstructionImages/db.png"/></li>
+    <li>В появившемся окне идем в папку с уже установленной программой (узи прогр или как-то так у тебя называется) и выбираем там фалй USD.db, по идеи он будет один там доступен. Нажимаем открыть.</li>
+    <li>Появится сообщение о удачон копирование файла БД - жмем ОК. Откроется программа.</li>
+    <li>
+        Для подгрузки страых данных, кторые разделелись в прошлый раз, выполняем следующие шаги:
+        <ol>
+            <li>Качаем файл старой бд отсюда: <a href="https://www.dropbox.com/s/500pmxzatj9sbr7/USD.db?dl=0">USD.db</a></li>
+            <li>В программе переходим в окно База.</li>
+            <li>Там нажимаем кнопку "Импорт данных в БД"</li>
+            <li>Выбираем скаченный файл и ждем сообщение о убачном импорте.</li>
+        </ol>
+    </li>
+    <li>После установки и первго запуска на рабочем столе появится ярлык на саму программу, а так же ярлык к папке с Word файлами иследований.</li>
+    <li>При желании можно скопировать старые Word файлы в нее.</li>
+    <li>Тепреь можно удалить старую версию программы, а новые версии будут качаться сами.</li>
+</ol>

@@ -13,6 +13,7 @@
             <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
             <RowDefinition MaxHeight="42" MinHeight="42"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition MaxHeight="42" MinHeight="42"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -44,5 +45,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Name="Import" MinWidth="120" Margin="10,3" Click="Import_OnClick">Импорт даных в БД</Button>
+            <Button Name="Export" MinWidth="120" Margin="10,3" Click="Export_OnClick">Экспорт БД</Button>
+        </StackPanel>
     </Grid>
 </Window>

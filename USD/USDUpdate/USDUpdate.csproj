@@ -129,6 +129,9 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\InstructionImages\db.png" />
+    <Content Include="Content\InstructionImages\install.png" />
+    <Content Include="Content\InstructionImages\install_window.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -138,15 +141,19 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Install\USD.application" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\2-512.ico.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\DocX.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\LiteDB.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\SimpleInjector.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\Templates\MammaTemplate.docx.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\USD.application" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\USD.exe.config.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\USD.exe.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_4\USD.exe.manifest" />
+    <Content Include="Install\USD.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Install\Application Files\USD_1_0_0_7\2-512.ico.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\DocX.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\LiteDB.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\Newtonsoft.Json.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\SimpleInjector.dll.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\Templates\MammaTemplate.docx.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\USD.application" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.config.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.deploy" />
+    <Content Include="Install\Application Files\USD_1_0_0_7\USD.exe.manifest" />
     <None Include="Properties\PublishProfiles\USDUpdate - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
