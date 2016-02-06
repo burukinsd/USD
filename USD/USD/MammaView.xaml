@@ -172,7 +172,7 @@
 
                 <CheckBox IsChecked="{Binding ActualToPhase, Mode=TwoWay}" 
                           IsEnabled="{Binding PhisiologicalStatus, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Normal, Mode=OneWay}"
-                          Grid.Row="16" Grid.ColumnSpan="12" Grid.Column="0">Строение соответсвует фазе менструального цикла</CheckBox>
+                          Grid.Row="16" Grid.ColumnSpan="12" Grid.Column="0">Строение соответствует фазе менструального цикла</CheckBox>
 
                 <Label Grid.Column="0" Grid.Row="17">Протоки</Label>
                 <RadioButton Grid.Column="1" Grid.ColumnSpan="11"  Grid.Row="17" VerticalAlignment="Center" GroupName="Canals" IsChecked="{Binding IsCanalsExpanded, Mode=TwoWay, 
@@ -278,7 +278,7 @@
                 <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="38" VerticalAlignment="Center" IsChecked="{Binding IsNotPatalogyConclusion, Mode=TwoWay}">УЗ данных за патологию молочных желез не получено</CheckBox>
                 <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="39">
                     <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsCystsConclusion, Mode=TwoWay}">УЗ признаки фиброзно-кистозной болезни</CheckBox>
-                    <TextBox Margin="5,3" IsEnabled="{Binding IsCystsConclusion, Mode=OneWay}" Text="{Binding CystsConclusionDesc, Mode=TwoWay}"/>
+                    <TextBox Margin="5,3" IsEnabled="{Binding IsCystsConclusion, Mode=OneWay}" Text="{Binding CystConslusionDesc, Mode=TwoWay}"/>
                 </DockPanel>
                 <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="40" VerticalAlignment="Center" IsChecked="{Binding IsInvolutionConclusion, Mode=TwoWay}">Фиброзно-жировая инволюция</CheckBox>
                 <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="41">

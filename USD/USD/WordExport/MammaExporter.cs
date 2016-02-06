@@ -36,7 +36,7 @@ namespace USD.WordExport
 
                 document.ReplaceText("%Grandular%", $"справа - {model.RightThicknessGlandularLayer ?? 0}мм, слева - {model.LeftThicknessGlandularLayer ?? 0}мм.");
 
-                document.ReplaceText("%ActualToPhase%", model.ActualToPhase ? "\r\nСтроение соответсвует фазе менструального цикла." : String.Empty);
+                document.ReplaceText("%ActualToPhase%", model.ActualToPhase ? "\r\nСтроение соответствует фазе менструального цикла." : String.Empty);
 
                 document.ReplaceText("%Canals%", MakeCanals(model));
 
