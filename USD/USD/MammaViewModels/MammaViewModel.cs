@@ -67,10 +67,11 @@ namespace USD.MammaViewModels
             DiffuseChangesFeatures = _model.DiffuseChangesFeatures;
             VisualizatioNippleArea = _model.VisualizatioNippleArea;
             AreCysts = _model.AreCysts;
-            CystsDesc = _model.CystsDesc;
             AreFocalFormations = _model.AreFocalFormations;
             FocalFormations = new ObservableCollection<FocalFormationViewModel>(_model.FocalFormations.Select(x => new FocalFormationViewModel(x)));
             FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
+            Cysts = new ObservableCollection<CystViewModel>(_model.Cysts.Select(x => new CystViewModel(x)));
+            Cysts.CollectionChanged += CystsOnCollectionChanged;
             IsDeterminateLymphNodes = _model.IsDeterminateLymphNodes;
             AdditionalDesc = _model.AdditionalDesc;
             IsNotPatalogyConclusion = _model.IsNotPatalogyConclusion;
@@ -84,6 +85,17 @@ namespace USD.MammaViewModels
             _isChanged = false;
         }
 
+        public ObservableCollection<CystViewModel> Cysts
+        {
+            get { return _cysts; }
+            set
+            {
+                if (Equals(value, _cysts)) return;
+                _cysts = value;
+                OnPropertyChanged(nameof(Cysts));
+            }
+        }
+
         private void InitializeCommand()
         {
             SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged);
@@ -93,7 +105,54 @@ namespace USD.MammaViewModels
             AddFFCommnad = new RelayCommand(x => AddFocalFormation(), x => AreFocalFormations);
             DeleteFFComand = new RelayCommand(x => DeleteFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
             CopyFFComand = new RelayCommand(x => CopyFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
+
+            AddCystCommnad = new RelayCommand(x => AddCyst(), x => AreCysts);
+            DeleteCystComand = new RelayCommand(x => DeleteCyst(), x => AreCysts && SelectedCyst != null);
+            CopyCystComand = new RelayCommand(x => CopyCyst(), x => AreCysts && SelectedCyst != null);
         }
+
+        public ICommand CopyCystComand { get; set; }
+
+        private void CopyCyst()
+        {
+            var newCyst = new CystViewModel()
+            {
+                Localization = SelectedCyst.Localization,
+                Structure = SelectedCyst.Structure,
+                Outlines = SelectedCyst.Outlines,
+                Echogenicity = SelectedCyst.Echogenicity,
+                Size = SelectedCyst.Size,
+                CDK = SelectedCyst.CDK
+            };
+            Cysts.Add(newCyst);
+        }
+
+        public CystViewModel SelectedCyst
+        {
+            get { return _selectedCyst; }
+            set
+            {
+                if (Equals(value, _selectedCyst)) return;
+                _selectedCyst = value;
+                OnPropertyChanged(nameof(SelectedCyst));
+            }
+        }
+
+        private void DeleteCyst()
+        {
+            var index = Cysts.IndexOf(SelectedCyst);
+            Cysts.Remove(SelectedCyst);
+            SelectedCyst = Cysts[index < Cysts.Count ? index : 0];
+        }
+
+        private void AddCyst()
+        {
+            Cysts.Add(new CystViewModel());
+        }
+
+        public ICommand DeleteCystComand { get; set; }
+
+        public ICommand AddCystCommnad { get; set; }
 
         private void CopyFocalFormation()
         {
@@ -167,6 +226,8 @@ namespace USD.MammaViewModels
             IsSpecificConclusion = false;
             FocalFormations = new ObservableCollection<FocalFormationViewModel>();
             FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
+            Cysts = new ObservableCollection<CystViewModel>();
+            Cysts.CollectionChanged += CystsOnCollectionChanged;
         }
 
         private void FocalFormationsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -190,6 +251,29 @@ namespace USD.MammaViewModels
         private void FocalFormationChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(FocalFormations));
+        }
+
+        private void CystsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged += CystChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged -= CystChanged;
+                }
+            }
+        }
+
+        private void CystChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(Cysts));
         }
 
 
@@ -235,7 +319,27 @@ namespace USD.MammaViewModels
             _model.DiffuseChangesFeatures = DiffuseChangesFeatures;
             _model.VisualizatioNippleArea = VisualizatioNippleArea;
             _model.AreCysts = AreCysts;
-            _model.CystsDesc = CystsDesc;
+
+            if (_model.Cysts == null)
+            {
+                _model.Cysts = new List<CystModel>();
+            }
+
+            _model.Cysts.Clear();
+            if (Cysts != null && Cysts.Any())
+            {
+                _model.Cysts.AddRange(Cysts.Select(x=> new CystModel()
+                {
+                    Localization = x.Localization,
+                    Outlines = x.Outlines,
+                    Echogenicity = x.Echogenicity,
+                    Structure = x.Structure,
+                    Size = x.Size,
+                    CDK = x.CDK
+                }));
+            }
+
+
             _model.AreFocalFormations = AreFocalFormations;
 
             if (_model.FocalFormations == null)
@@ -285,7 +389,6 @@ namespace USD.MammaViewModels
         private VisualizatioNippleArea _visualizatioNippleArea;
         private ObservableCollection<FocalFormationViewModel> _focalFormations;
         private bool _areCysts;
-        private string _cystsDesc;
         private bool _areFocalFormations;
         private bool _isDeterminateLymphNodes;
         private string _lymphNodesDesc;
@@ -299,6 +402,8 @@ namespace USD.MammaViewModels
         private MammaSpecialists _mammaSpecialistsRecomendation;
         private FocalFormationViewModel _selectedFocalFormation;
         private bool _actualToPhase;
+        private ObservableCollection<CystViewModel> _cysts;
+        private CystViewModel _selectedCyst;
 
 
         public DateTime VisitDate
@@ -497,17 +602,6 @@ namespace USD.MammaViewModels
                 if (value == _areCysts) return;
                 _areCysts = value;
                 OnPropertyChanged(nameof(AreCysts));
-            }
-        }
-
-        public string CystsDesc
-        {
-            get { return _cystsDesc; }
-            set
-            {
-                if (value == _cystsDesc) return;
-                _cystsDesc = value;
-                OnPropertyChanged(nameof(CystsDesc));
             }
         }
 

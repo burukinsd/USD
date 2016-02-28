@@ -63,7 +63,9 @@
 
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
-                    <RowDefinition MaxHeight="56" MinHeight="56"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="112" MinHeight="112"></RowDefinition>
 
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
@@ -219,30 +221,47 @@
                 </DockPanel>
 
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="26">Кисты:</Label>
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="26">Кистозные образования:</Label>
                 <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="27" VerticalAlignment="Center" GroupName="Cyst" IsChecked="{Binding AreCysts, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
                              ConverterParameter={StaticResource False}}">не выявляются</RadioButton>
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="28">
-                    <RadioButton VerticalAlignment="Center" GroupName="Cyst" IsChecked="{Binding AreCysts, Mode=TwoWay, 
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="28" VerticalAlignment="Center" GroupName="Cyst" IsChecked="{Binding AreCysts, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
                              ConverterParameter={StaticResource True}}">выявляются:</RadioButton>
-                    <TextBox Margin="5,3" IsEnabled="{Binding AreCysts, Mode=OneWay}" Text="{Binding CystsDesc, Mode=TwoWay}" TextWrapping="WrapWithOverflow"/>
-                </DockPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="29" Grid.Column="10" Grid.ColumnSpan="2" IsEnabled="{Binding AreCysts, Mode=OneWay}">
+                    <Button MinWidth="75" Margin="6,1" Command="{Binding AddCystCommnad}">Добавить</Button>
+                    <Button MinWidth="75" Margin="6,1" Command="{Binding DeleteCystComand}">Удалить</Button>
+                    <Button MinWidth="75" Margin="6,1" Command="{Binding CopyCystComand}">Копировать</Button>
+                </StackPanel>
+                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" CanUserDeleteRows="False" CanUserAddRows="False" CanUserSortColumns="False"
+                          CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False"
+                          IsEnabled="{Binding AreCysts, Mode=OneWay}"
+                          ItemsSource="{Binding Cysts, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedCyst, Mode=TwoWay}"
+                          LoadingRow="DataGrid_LoadingRow" DataGridCell.Selected="DataGrid_GotFocus"
+                          ColumnWidth="*" VerticalScrollBarVisibility="Visible" MaxHeight="112">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Локализация" Width="38*" Binding="{Binding Localization}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Размер, мм" Width="7*" Binding="{Binding Size}"></DataGridTextColumn>
+                        <DataGridComboBoxColumn Header="Контуры" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:OutlinesType}}}" SelectedItemBinding="{Binding Outlines}"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="Эхогенность" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Echogenicity}}}" SelectedItemBinding="{Binding Echogenicity}"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="Внутреняя структура" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Structure}}}" SelectedItemBinding="{Binding Structure}"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="При ЦДК" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:CDK}}}" SelectedItemBinding="{Binding CDK}"></DataGridComboBoxColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="29">Очаговые образования (изменения):</Label>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="30" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="{Binding AreFocalFormations, Mode=TwoWay, 
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="31">Очаговые образования (изменения):</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="32" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="{Binding AreFocalFormations, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
                              ConverterParameter={StaticResource False}}">не выявляются</RadioButton>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="31" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="{Binding AreFocalFormations, Mode=TwoWay, 
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="10" Grid.Row="33" VerticalAlignment="Center" GroupName="FocalFormation" IsChecked="{Binding AreFocalFormations, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
                              ConverterParameter={StaticResource True}}">выявляются</RadioButton>
-                <StackPanel Orientation="Horizontal" Grid.Row="31" Grid.Column="10" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" Grid.Row="33" Grid.Column="10" Grid.ColumnSpan="2" IsEnabled="{Binding AreFocalFormations, Mode=OneWay}"> 
                     <Button MinWidth="75" Margin="6,1" Command="{Binding AddFFCommnad}">Добавить</Button>
                     <Button MinWidth="75" Margin="6,1" Command="{Binding DeleteFFComand}">Удалить</Button>
                     <Button MinWidth="75" Margin="6,1" Command="{Binding CopyFFComand}">Копировать</Button>
                 </StackPanel>
-                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="32" CanUserDeleteRows="False" CanUserAddRows="False" CanUserSortColumns="False"
+                <DataGrid Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="34" CanUserDeleteRows="False" CanUserAddRows="False" CanUserSortColumns="False"
                           CanUserReorderColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False"
                           IsEnabled="{Binding AreFocalFormations, Mode=OneWay}"
                           ItemsSource="{Binding FocalFormations, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedFocalFormation, Mode=TwoWay}"
@@ -257,11 +276,11 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="33">Региональные лифматические узлы (над-, подключичиные, подмышечные):</Label>
-                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="34" VerticalAlignment="Center" GroupName="LymphNodes" IsChecked="{Binding IsDeterminateLymphNodes, Mode=TwoWay, 
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="35">Региональные лифматические узлы (над-, подключичиные, подмышечные):</Label>
+                <RadioButton Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="36" VerticalAlignment="Center" GroupName="LymphNodes" IsChecked="{Binding IsDeterminateLymphNodes, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
                              ConverterParameter={StaticResource False}}">не определяются</RadioButton>
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="35">
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="37">
                     <RadioButton VerticalAlignment="Center" GroupName="LymphNodes"
                                  IsChecked="{Binding IsDeterminateLymphNodes, Mode=TwoWay, 
                              Converter={StaticResource RadioButtonCheckedConverter},
@@ -269,24 +288,24 @@
                     <TextBox IsEnabled="{Binding IsDeterminateLymphNodes, Mode=OneWay}" Text="{Binding LymphNodesDesc, Mode=TwoWay}" Margin="5,3" TextWrapping="WrapWithOverflow"/>
                 </DockPanel>
 
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="36">
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="38">
                     <Label>Дополнительно:</Label>
                     <TextBox Margin="5,3" Text="{Binding AdditionalDesc}"></TextBox>
                 </DockPanel>
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="37">Заключение:</Label>
-                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="38" VerticalAlignment="Center" IsChecked="{Binding IsNotPatalogyConclusion, Mode=TwoWay}">УЗ данных за патологию молочных желез не получено</CheckBox>
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="39">
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="39">Заключение:</Label>
+                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="40" VerticalAlignment="Center" IsChecked="{Binding IsNotPatalogyConclusion, Mode=TwoWay}">УЗ данных за патологию молочных желез не получено</CheckBox>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="41">
                     <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsCystsConclusion, Mode=TwoWay}">УЗ признаки фиброзно-кистозной болезни</CheckBox>
                     <TextBox Margin="5,3" IsEnabled="{Binding IsCystsConclusion, Mode=OneWay}" Text="{Binding CystConslusionDesc, Mode=TwoWay}"/>
                 </DockPanel>
-                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="40" VerticalAlignment="Center" IsChecked="{Binding IsInvolutionConclusion, Mode=TwoWay}">Фиброзно-жировая инволюция</CheckBox>
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="41">
+                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="42" VerticalAlignment="Center" IsChecked="{Binding IsInvolutionConclusion, Mode=TwoWay}">Фиброзно-жировая инволюция</CheckBox>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="43">
                     <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsSpecificConclusion, Mode=TwoWay}"></CheckBox>
                     <TextBox Margin="5,3" IsEnabled="{Binding IsSpecificConclusion, Mode=OneWay}" Text="{Binding SpecificConclusionDesc, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="42">
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="44">
                     <Label>Рекомендована консультация</Label>
                     <ComboBox MaxWidth="150" MinWidth="150" Margin="5,3" HorizontalAlignment="Left" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:MammaSpecialists}}}" SelectedItem="{Binding MammaSpecialistsRecomendation}"></ComboBox>
                 </DockPanel>

@@ -38,6 +38,6 @@ namespace USD.MammaModels
         public bool IsSpecificConclusion { get; set; }
         public string SpecificConclusionDesc { get; set; }
         public MammaSpecialists Recomendation { get; set; }
-        
+        public List<CystModel> Cysts { get; set; }
     }
 }

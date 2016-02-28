@@ -18,7 +18,7 @@ namespace USD.WordExport
             var directoryFullPath = ExportDirectoryCreator.EnsureDirectory();
 
             var fileFullPath =
-                $"{directoryFullPath}\\{model.VisitDate.ToShortDateString()} {model.FIO} {model.BirthYear}.docx";
+                $"{directoryFullPath}\\{model.VisitDate.ToString("dd.MM.yyyy")} {model.FIO} {model.BirthYear}.docx";
 
             using (DocX document = DocX.Load(@"Templates\MammaTemplate.docx"))
             {
@@ -82,7 +82,7 @@ namespace USD.WordExport
             var builder = new StringBuilder();
             if (model.AreFocalFormations)
             {
-                builder.Append("выявляются:");
+                builder.AppendLine("выявляются:");
                 if (model.FocalFormations == null) return builder.ToString();
                 foreach (var formation in model.FocalFormations)
                 {
@@ -120,11 +120,44 @@ namespace USD.WordExport
             var builder = new StringBuilder();
             if (model.AreCysts)
             {
-                builder.Append("выявляются ");
-                builder.Append(model.CystsDesc ?? String.Empty);
-                if (model.CystsDesc != null && !model.CystsDesc.EndsWith("."))
+                if (!String.IsNullOrEmpty(model.CystsDesc))
                 {
-                    builder.Append(".");
+                    builder.Append("выявляются ");
+                    builder.Append(model.CystsDesc ?? String.Empty);
+                    if (model.CystsDesc != null && !model.CystsDesc.EndsWith("."))
+                    {
+                        builder.Append(".");
+                    }
+                }
+                else
+                {
+                    builder.AppendLine("выявляются:");
+                    if (model.Cysts == null) return builder.ToString();
+                    foreach (var cyst in model.Cysts)
+                    {
+                        var innerBuilder = new StringBuilder();
+
+                        var number = model.Cysts.IndexOf(cyst) + 1;
+
+                        innerBuilder.Append(number);
+                        innerBuilder.Append(". ");
+                        innerBuilder.Append(cyst.Localization ?? String.Empty);
+                        innerBuilder.Append(", ");
+                        innerBuilder.Append(cyst.Size ?? String.Empty);
+                        innerBuilder.Append("мм, ");
+                        innerBuilder.Append("контуры ");
+                        innerBuilder.Append(cyst.Outlines.EnumDescription());
+                        innerBuilder.Append(", ");
+                        innerBuilder.Append(cyst.Echogenicity.EnumDescription());
+                        innerBuilder.Append(", ");
+                        innerBuilder.Append("внутренняя структура ");
+                        innerBuilder.Append(cyst.Structure.EnumDescription());
+                        innerBuilder.Append("при ЦДК ");
+                        innerBuilder.Append(cyst.CDK.EnumDescription());
+                        innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");
+
+                        builder.AppendLine(innerBuilder.ToString());
+                    }
                 }
             }
             else

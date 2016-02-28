@@ -29,12 +29,13 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>http://usdupdate.azurewebsites.net/install/</InstallUrl>
     <UpdateUrl>http://usdupdate.azurewebsites.net/install/</UpdateUrl>
+    <TargetCulture>ru</TargetCulture>
     <ProductName>USD</ProductName>
     <PublisherName>Buru</PublisherName>
     <SuiteName>USD</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -119,12 +120,15 @@
     <Compile Include="DAL\IMammaRepository.cs" />
     <Compile Include="DAL\LiteDbWraper.cs" />
     <Compile Include="DAL\MammaRepository.cs" />
+    <Compile Include="DirectoryHelper.cs" />
     <Compile Include="ListView.xaml.cs">
       <DependentUpon>ListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ListViewModel\ItemListViewModel.cs" />
     <Compile Include="ListViewModel\ListViewModel.cs" />
+    <Compile Include="MammaModels\CDK.cs" />
     <Compile Include="MammaModels\ConclusionMaker.cs" />
+    <Compile Include="MammaModels\CystModel.cs" />
     <Compile Include="MammaModels\DiffuseChanges.cs" />
     <Compile Include="MammaModels\Echogenicity.cs" />
     <Compile Include="MammaModels\FocalFormationModel.cs" />
@@ -135,6 +139,7 @@
     <Compile Include="MammaModels\Structure.cs" />
     <Compile Include="MammaModels\TissueRatio.cs" />
     <Compile Include="MammaModels\VisualizatioNippleArea.cs" />
+    <Compile Include="MammaViewModels\CystViewModel.cs" />
     <Compile Include="MammaViewModels\FocalFormationViewModel.cs" />
     <Compile Include="MammaViewModels\MammaViewModel.cs" />
     <Compile Include="ContainerFactory.cs" />

@@ -136,24 +136,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Install\publish.htm" />
-    <Content Include="Install\setup.exe" />
+    <Content Include="Install\USDUpdater.exe" />
+    <Content Include="Install\version.htm" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Install\USD.application" />
-    <Content Include="Install\USD.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Install\Application Files\USD_1_0_0_8\2-512.ico.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\DocX.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\LiteDB.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\Newtonsoft.Json.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\SimpleInjector.dll.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\Templates\MammaTemplate.docx.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\USD.application" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.config.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.deploy" />
-    <Content Include="Install\Application Files\USD_1_0_0_8\USD.exe.manifest" />
+    <Content Include="Install\USD.zip" />
     <None Include="Properties\PublishProfiles\USDUpdate - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

@@ -7,16 +7,16 @@ using USD.Properties;
 
 namespace USD.DAL
 {
-    class LiteDbWraper : IDbWraper
+    public class LiteDbWraper : IDbWraper
     {
-        readonly Dictionary<Type, string> _collectionsDictionary = new Dictionary<Type, string>()
+        private readonly Dictionary<Type, string> _collectionsDictionary = new Dictionary<Type, string>()
         {
             { typeof(MammaModel), "screenings"}
         }; 
 
         public ObjectId Add<T>(T item) where T : new()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
@@ -26,7 +26,7 @@ namespace USD.DAL
 
         public T GetById<T>(ObjectId id) where T : new()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
 
@@ -36,7 +36,7 @@ namespace USD.DAL
 
         public void Delete<T>(ObjectId id) where T : new()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
 
@@ -46,7 +46,7 @@ namespace USD.DAL
 
         public void Update<T>(T item) where T : new()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
 
@@ -56,7 +56,7 @@ namespace USD.DAL
 
         public IEnumerable<T> GetAll<T>() where T : new()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
 

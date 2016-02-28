@@ -35,33 +35,43 @@ namespace USD
 
         private static void EnsureDbFile()
         {
-            if (!File.Exists(Settings.Default.LiteDbFileName))
+            var specialDirectory = DirectoryHelper.GetDataDirectory();
+            if (!File.Exists($"{specialDirectory}{Settings.Default.LiteDbFileName}"))
             {
                 var dialogResult =
                     MessageBox.Show(
                         "База данных не найдена. Вы хотите указать имеющийся файл базы дынных? Иначе будет создана новая база.",
                         "УЗД", MessageBoxButton.YesNo,
                         MessageBoxImage.Question, MessageBoxResult.Yes);
-                if (dialogResult == MessageBoxResult.Yes)
+                switch (dialogResult)
                 {
-                    var openFileDialog = new OpenFileDialog
-                    {
-                        Filter = "Файлы БД программы (USD.db)|USD.db|Все файлы БД (*.db)|*.db|Все файлы (*.*)|*.*"
-                    };
-                    if (openFileDialog.ShowDialog() == true)
-                    {
-                        File.Copy(openFileDialog.FileName, Settings.Default.LiteDbFileName);
-                        MessageBox.Show("Файл база данных успешно скопирован.", "УЗД", MessageBoxButton.OK,
-                            MessageBoxImage.Information);
-                    }
+                    case MessageBoxResult.Yes:
+                        var openFileDialog = new OpenFileDialog
+                        {
+                            Filter = "Файлы БД программы (USD.db)|USD.db|Все файлы БД (*.db)|*.db|Все файлы (*.*)|*.*"
+                        };
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            File.Copy(openFileDialog.FileName, $"{specialDirectory}{Settings.Default.LiteDbFileName}");
+                            MessageBox.Show("Файл база данных успешно скопирован.", "УЗД", MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        var f = File.Create(specialDirectory + Settings.Default.LiteDbFileName);
+                        f.Flush();
+                        f.Close();
+                        break;
                 }
             }
         }
 
         private static void DbMigration()
         {
-            using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+            using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
+                if (!db.CollectionExists("screenings")) return;
+                
                 var col = db.GetCollection("screenings");
                 IEnumerable<BsonDocument> items = col.FindAll().ToList();
                 foreach (var item in items)
@@ -127,7 +137,7 @@ namespace USD
                     Body = JsonConvert.SerializeObject(ex),
                     Priority = MailPriority.High
                 };
-                mail.Attachments.Add(new Attachment(Settings.Default.LiteDbFileName));
+                mail.Attachments.Add(new Attachment(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName));
                 mail.To.Add("burukinsd@gmail.com");
                 using (SmtpClient client = new SmtpClient()
                 {

@@ -38,7 +38,7 @@ namespace USD
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                using (var db = new LiteDatabase(Settings.Default.LiteDbFileName))
+                using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
                 {
                     using (var db1 = new LiteDatabase(openFileDialog.FileName))
                     {
@@ -69,7 +69,7 @@ namespace USD
             var saveFileDialog = new SaveFileDialog() {Filter = "Файлы БД (*.db)|*.db" };
             if (saveFileDialog.ShowDialog() == true)
             {
-                File.Copy(Settings.Default.LiteDbFileName, saveFileDialog.FileName);
+                File.Copy(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName, saveFileDialog.FileName);
                 MessageBox.Show("База успешно экспортирована.", "УЗД", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
