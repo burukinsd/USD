@@ -12,6 +12,9 @@ namespace USD.MammaModels
         [Description("ровные нечеткие")]
         SmothNotClear,
 
+        [Description("неровные четкие")]
+        NotSmothClear,
+
         [Description("неровные нечеткие")]
         NotSmothNotClear,
 

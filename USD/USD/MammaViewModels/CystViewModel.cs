@@ -11,7 +11,7 @@ namespace USD.MammaViewModels
         public CystViewModel()
         {
             Outlines = OutlinesType.SmothClear;
-            Echogenicity = Echogenicity.Hypo;
+            Echogenicity = Echogenicity.None;
             Structure = Structure.Homogenous;
             CDK = CDK.Avascular;
         }

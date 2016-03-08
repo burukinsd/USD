@@ -26,6 +26,10 @@ namespace USD.MammaModels
             {
                 conclusionStringBuilder.Append("Фиброзно-жировая инволюция. ");
             }
+            if (mammaModel.IsAdenosisConclusion)
+            {
+                conclusionStringBuilder.Append("УЗ признаки фиброаденоматоза. ");
+            }
             if (mammaModel.IsSpecificConclusion)
             {
                 conclusionStringBuilder.Append(mammaModel.SpecificConclusionDesc ?? String.Empty);

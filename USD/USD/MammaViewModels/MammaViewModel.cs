@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Documents;
 using System.Windows.Input;
 using LiteDB;
 using USD.Annotations;
@@ -15,7 +16,7 @@ using USD.WordExport;
 
 namespace USD.MammaViewModels
 {
-    public class MammaViewModel:INotifyPropertyChanged
+    public class MammaViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         private readonly IMammaRepository _mammaRepository;
 
@@ -34,7 +35,7 @@ namespace USD.MammaViewModels
             _autoSaveBackgroundWorker.RunWorkerCompleted += (sender, args) => _lastSaved = DateTime.Now;
 
             DefaultInitialize();
-            
+
             InitializeCommand();
 
             _isChanged = false;
@@ -58,8 +59,7 @@ namespace USD.MammaViewModels
             IsSkinChanged = _model.IsSkinChanged;
             SkinChangedDesc = _model.SkinChangedDesc;
             TissueRatio = _model.TissueRatio;
-            LeftThicknessGlandularLayer = _model.LeftThicknessGlandularLayer;
-            RightThicknessGlandularLayer = _model.RightThicknessGlandularLayer;
+            MaxThicknessGlandularLayer = _model.MaxThicknessGlandularLayer;
             ActualToPhase = _model.ActualToPhase;
             IsCanalsExpanded = _model.IsCanalsExpanded;
             CanalsExpandingDesc = _model.CanalsExpandingDesc;
@@ -79,6 +79,7 @@ namespace USD.MammaViewModels
             CystConslusionDesc = _model.CystConslusionDesc;
             IsInvolutionConclusion = _model.IsInvolutionConclusion;
             IsSpecificConclusion = _model.IsSpecificConclusion;
+            IsAdenosisConclusion = _model.IsAdenosisConclusion;
             SpecificConclusionDesc = _model.SpecificConclusionDesc;
             MammaSpecialistsRecomendation = _model.Recomendation;
 
@@ -98,9 +99,9 @@ namespace USD.MammaViewModels
 
         private void InitializeCommand()
         {
-            SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged);
+            SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged && _isValid);
             GotoListCommand = new RelayCommand(x => ShowList());
-            ExportCommand = new RelayCommand(x => Export());
+            ExportCommand = new RelayCommand(x => Export(), x => _isValid);
 
             AddFFCommnad = new RelayCommand(x => AddFocalFormation(), x => AreFocalFormations);
             DeleteFFComand = new RelayCommand(x => DeleteFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
@@ -310,8 +311,7 @@ namespace USD.MammaViewModels
             _model.IsSkinChanged = IsSkinChanged;
             _model.SkinChangedDesc = SkinChangedDesc;
             _model.TissueRatio = TissueRatio;
-            _model.LeftThicknessGlandularLayer = LeftThicknessGlandularLayer;
-            _model.RightThicknessGlandularLayer = RightThicknessGlandularLayer;
+            _model.MaxThicknessGlandularLayer = MaxThicknessGlandularLayer;
             _model.ActualToPhase = ActualToPhase;
             _model.IsCanalsExpanded = IsCanalsExpanded;
             _model.CanalsExpandingDesc = CanalsExpandingDesc;
@@ -328,7 +328,7 @@ namespace USD.MammaViewModels
             _model.Cysts.Clear();
             if (Cysts != null && Cysts.Any())
             {
-                _model.Cysts.AddRange(Cysts.Select(x=> new CystModel()
+                _model.Cysts.AddRange(Cysts.Select(x => new CystModel()
                 {
                     Localization = x.Localization,
                     Outlines = x.Outlines,
@@ -356,7 +356,8 @@ namespace USD.MammaViewModels
                     Outlines = x.Outlines,
                     Echogenicity = x.Echogenicity,
                     Structure = x.Structure,
-                    Size = x.Size
+                    Size = x.Size,
+                    CDK = x.CDK
                 }));
             }
 
@@ -367,6 +368,7 @@ namespace USD.MammaViewModels
             _model.CystConslusionDesc = CystConslusionDesc;
             _model.IsInvolutionConclusion = IsInvolutionConclusion;
             _model.IsSpecificConclusion = IsSpecificConclusion;
+            _model.IsAdenosisConclusion = IsAdenosisConclusion;
             _model.SpecificConclusionDesc = SpecificConclusionDesc;
             _model.Recomendation = MammaSpecialistsRecomendation;
         }
@@ -381,7 +383,7 @@ namespace USD.MammaViewModels
         private string _skinChangedDesc;
         private TissueRatio _tissueRatio;
         private decimal? _leftThicknessGlandularLayer;
-        private decimal? _rightThicknessGlandularLayer;
+        private decimal? _maxThicknessGlandularLayer;
         private bool _isCanalsExpanded;
         private string _canalsExpandingDesc;
         private DiffuseChanges _diffuseChanges;
@@ -404,6 +406,8 @@ namespace USD.MammaViewModels
         private bool _actualToPhase;
         private ObservableCollection<CystViewModel> _cysts;
         private CystViewModel _selectedCyst;
+        private bool _isAdenosisConclusion;
+        private bool _isValid;
 
 
         public DateTime VisitDate
@@ -506,25 +510,14 @@ namespace USD.MammaViewModels
             }
         }
 
-        public decimal? LeftThicknessGlandularLayer
+        public decimal? MaxThicknessGlandularLayer
         {
-            get { return _leftThicknessGlandularLayer; }
+            get { return _maxThicknessGlandularLayer; }
             set
             {
-                if (value == _leftThicknessGlandularLayer) return;
-                _leftThicknessGlandularLayer = value;
-                OnPropertyChanged(nameof(LeftThicknessGlandularLayer));
-            }
-        }
-
-        public decimal? RightThicknessGlandularLayer
-        {
-            get { return _rightThicknessGlandularLayer; }
-            set
-            {
-                if (value == _rightThicknessGlandularLayer) return;
-                _rightThicknessGlandularLayer = value;
-                OnPropertyChanged(nameof(RightThicknessGlandularLayer));
+                if (value == _maxThicknessGlandularLayer) return;
+                _maxThicknessGlandularLayer = value;
+                OnPropertyChanged(nameof(MaxThicknessGlandularLayer));
             }
         }
 
@@ -602,6 +595,10 @@ namespace USD.MammaViewModels
                 if (value == _areCysts) return;
                 _areCysts = value;
                 OnPropertyChanged(nameof(AreCysts));
+                if (!Cysts.Any())
+                {
+                    Cysts.Add(new CystViewModel());
+                }
             }
         }
 
@@ -613,6 +610,10 @@ namespace USD.MammaViewModels
                 if (value == _areFocalFormations) return;
                 _areFocalFormations = value;
                 OnPropertyChanged(nameof(AreFocalFormations));
+                if (!FocalFormations.Any())
+                {
+                    FocalFormations.Add(new FocalFormationViewModel());
+                }
             }
         }
 
@@ -679,6 +680,13 @@ namespace USD.MammaViewModels
                 if (value == _isNotPatalogyConclusion) return;
                 _isNotPatalogyConclusion = value;
                 OnPropertyChanged(nameof(IsNotPatalogyConclusion));
+                if (value)
+                {
+                    IsCystsConclusion = false;
+                    IsAdenosisConclusion = false;
+                    IsInvolutionConclusion = false;
+                    IsSpecificConclusion = false;
+                }
             }
         }
 
@@ -690,6 +698,8 @@ namespace USD.MammaViewModels
                 if (value == _isCystsConclusion) return;
                 _isCystsConclusion = value;
                 OnPropertyChanged(nameof(IsCystsConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
             }
         }
 
@@ -712,6 +722,22 @@ namespace USD.MammaViewModels
                 if (value == _isInvolutionConclusion) return;
                 _isInvolutionConclusion = value;
                 OnPropertyChanged(nameof(IsInvolutionConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
+            }
+        }
+
+        public bool IsAdenosisConclusion
+        {
+            get { return _isAdenosisConclusion; }
+            set
+            {
+                if (value == _isAdenosisConclusion) return;
+                _isAdenosisConclusion = value;
+                OnPropertyChanged(nameof(IsAdenosisConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
+
             }
         }
 
@@ -723,6 +749,8 @@ namespace USD.MammaViewModels
                 if (value == _isSpecificConclusion) return;
                 _isSpecificConclusion = value;
                 OnPropertyChanged(nameof(IsSpecificConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
             }
         }
 
@@ -764,5 +792,24 @@ namespace USD.MammaViewModels
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                var error = String.Empty;
+                switch (columnName)
+                {
+                    case nameof(BirthYear):
+                        if (String.IsNullOrEmpty(BirthYear) || Convert.ToInt32(BirthYear) < 1900 || Convert.ToInt32(BirthYear) > DateTime.Now.Year)
+                            error = "Нужно указать реальный год рождения.";
+                        break;
+                }
+                _isValid = String.IsNullOrEmpty(error); 
+                return error;
+            }
+        }
+
+        public string Error { get; }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Diagnostics;
-using System.IO;
-using System.Linq.Expressions;
-using System.Net.Http;
-using System.Net.Mime;
 using System.Text;
 using Novacode;
 using USD.MammaModels;
@@ -34,7 +29,7 @@ namespace USD.WordExport
 
                 document.ReplaceText("%Tissue%", MakeTissue(model));
 
-                document.ReplaceText("%Grandular%", $"справа - {model.RightThicknessGlandularLayer ?? 0}мм, слева - {model.LeftThicknessGlandularLayer ?? 0}мм.");
+                document.ReplaceText("%Grandular%", MakeGrandular(model));
 
                 document.ReplaceText("%ActualToPhase%", model.ActualToPhase ? "\r\nСтроение соответствует фазе менструального цикла." : String.Empty);
 
@@ -54,12 +49,27 @@ namespace USD.WordExport
 
                 document.ReplaceText("%Conclusion%", ConclusionMaker.MakeConclusion(model));
 
-                document.ReplaceText("%Recomendation%", model.Recomendation == MammaSpecialists.None ? String.Empty : $"\r\nРекомендована консультация: {model.Recomendation.EnumDescription()}");
+                document.ReplaceText("%Recomendation%", model.Recomendation == MammaSpecialists.None ? String.Empty : $"\r\nРекомендована консультация {model.Recomendation.EnumDescription()}, маммография");
 
                 document.SaveAs(fileFullPath);
             }
 
             Process.Start(fileFullPath);
+        }
+
+        private static string MakeGrandular(MammaModel model)
+        {
+            if (model.MaxThicknessGlandularLayer.HasValue)
+            {
+                return $"{model.MaxThicknessGlandularLayer} мм.";
+            }
+            else
+            {
+#pragma warning disable 618
+                var val = Math.Max(model.LeftThicknessGlandularLayer ?? 0, model.RightThicknessGlandularLayer ?? 0);
+#pragma warning restore 618
+                return $"{val} мм.";
+            }
         }
 
         private static string MakeLymphNodes(MammaModel model)
@@ -103,6 +113,9 @@ namespace USD.WordExport
                     innerBuilder.Append(", ");
                     innerBuilder.Append("внутренняя структура ");
                     innerBuilder.Append(formation.Structure.EnumDescription());
+                    innerBuilder.Append(", ");
+                    innerBuilder.Append("при ЦДК ");
+                    innerBuilder.Append(formation.CDK.EnumDescription());
                     innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");
 
                     builder.AppendLine(innerBuilder.ToString());
@@ -152,6 +165,7 @@ namespace USD.WordExport
                         innerBuilder.Append(", ");
                         innerBuilder.Append("внутренняя структура ");
                         innerBuilder.Append(cyst.Structure.EnumDescription());
+                        innerBuilder.Append(", ");
                         innerBuilder.Append("при ЦДК ");
                         innerBuilder.Append(cyst.CDK.EnumDescription());
                         innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");

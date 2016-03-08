@@ -17,6 +17,26 @@
         <System:Boolean x:Key="True">True</System:Boolean>
         <System:Boolean x:Key="False">False</System:Boolean>
         <viewTools:EnumBooleanConverter x:Key="EnumBooleanConverter" />
+        
+        <ControlTemplate x:Key="validationFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+                <TextBlock Foreground="Red" FontSize="16" FontWeight="Bold">!</TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+                Value="{Binding RelativeSource={RelativeSource Self},
+                    Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -83,6 +103,7 @@
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
 
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                 </Grid.RowDefinitions>
@@ -113,7 +134,15 @@
                 
                 <DockPanel  Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3">
                     <Label >Год рождения:</Label>
-                    <TextBox Margin="0,3,5,3"  MaxWidth="50" MinWidth="50" HorizontalAlignment="Left" Text="{Binding BirthYear, Mode=TwoWay}"></TextBox>
+                    <TextBox Margin="0,3,5,3"  MaxWidth="50" MinWidth="50" HorizontalAlignment="Left" Validation.ErrorTemplate="{StaticResource validationFailed}">
+                        <TextBox.Text>
+                            <Binding Path="BirthYear" Mode="TwoWay">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </DockPanel>
 
                 <DockPanel  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12" HorizontalAlignment="Stretch">
@@ -162,13 +191,9 @@
                              IsChecked="{Binding TissueRatio, Mode = TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=MoreAdipose}">
                     много жировой (подкожной, в центральнх, задних отделах).</RadioButton>
 
-                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="14">Толщина железистого слоя:</Label>
+                <Label Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="14">Толщина железистого слоя до:</Label>
                 <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="15">
-                    <Label>Справа:</Label>
-                    <TextBox Width="30" Margin="0,5" Text="{Binding RightThicknessGlandularLayer, Mode = TwoWay}"></TextBox>
-                    <Label>мм</Label>
-                    <Label>Слева:</Label>
-                    <TextBox Width="30" Margin="0,5" Text="{Binding LeftThicknessGlandularLayer, Mode = TwoWay}"></TextBox>
+                    <TextBox Width="30" Margin="0,5" Text="{Binding MaxThicknessGlandularLayer, Mode = TwoWay}"></TextBox>
                     <Label>мм</Label>
                 </StackPanel>
 
@@ -273,6 +298,7 @@
                         <DataGridComboBoxColumn Header="Контуры" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:OutlinesType}}}" SelectedItemBinding="{Binding Outlines}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Эхогенность" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Echogenicity}}}" SelectedItemBinding="{Binding Echogenicity}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Внутреняя структура" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Structure}}}" SelectedItemBinding="{Binding Structure}"></DataGridComboBoxColumn>
+                        <DataGridComboBoxColumn Header="При ЦДК" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:CDK}}}" SelectedItemBinding="{Binding CDK}"></DataGridComboBoxColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -300,12 +326,13 @@
                     <TextBox Margin="5,3" IsEnabled="{Binding IsCystsConclusion, Mode=OneWay}" Text="{Binding CystConslusionDesc, Mode=TwoWay}"/>
                 </DockPanel>
                 <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="42" VerticalAlignment="Center" IsChecked="{Binding IsInvolutionConclusion, Mode=TwoWay}">Фиброзно-жировая инволюция</CheckBox>
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="43">
+                <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="43" VerticalAlignment="Center" IsChecked="{Binding IsAdenosisConclusion, Mode=TwoWay}">УЗ признаки фиброаденоматоза</CheckBox>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="44">
                     <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsSpecificConclusion, Mode=TwoWay}"></CheckBox>
                     <TextBox Margin="5,3" IsEnabled="{Binding IsSpecificConclusion, Mode=OneWay}" Text="{Binding SpecificConclusionDesc, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="44">
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="45">
                     <Label>Рекомендована консультация</Label>
                     <ComboBox MaxWidth="150" MinWidth="150" Margin="5,3" HorizontalAlignment="Left" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:MammaSpecialists}}}" SelectedItem="{Binding MammaSpecialistsRecomendation}"></ComboBox>
                 </DockPanel>

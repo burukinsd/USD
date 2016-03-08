@@ -16,8 +16,11 @@ namespace USD.MammaModels
         public bool IsSkinChanged{ get; set; }
         public string SkinChangedDesc{ get; set; }
         public TissueRatio TissueRatio{ get; set; }
+        [Obsolete("Переехало на одно поле MaxThicknessGlandularLayer")]
         public decimal? LeftThicknessGlandularLayer{ get; set; }
+        [Obsolete("Переехало на одно поле MaxThicknessGlandularLayer")]
         public decimal? RightThicknessGlandularLayer{ get; set; }
+        public decimal? MaxThicknessGlandularLayer { get; set; }
         public bool ActualToPhase { get; set; } = true;
         public bool IsCanalsExpanded { get; set; }
         public string CanalsExpandingDesc { get; set; }
@@ -36,6 +39,7 @@ namespace USD.MammaModels
         public string CystConslusionDesc { get; set; }
         public bool IsInvolutionConclusion { get; set; }
         public bool IsSpecificConclusion { get; set; }
+        public bool IsAdenosisConclusion { get; set; }
         public string SpecificConclusionDesc { get; set; }
         public MammaSpecialists Recomendation { get; set; }
         public List<CystModel> Cysts { get; set; }
