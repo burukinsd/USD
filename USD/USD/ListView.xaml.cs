@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using LiteDB;
 using Microsoft.Win32;
 using USD.Properties;
@@ -19,7 +8,7 @@ using USD.Properties;
 namespace USD
 {
     /// <summary>
-    /// Interaction logic for ListView.xaml
+    ///     Interaction logic for ListView.xaml
     /// </summary>
     public partial class ListView : Window
     {
@@ -66,7 +55,7 @@ namespace USD
 
         private void Export_OnClick(object sender, RoutedEventArgs e)
         {
-            var saveFileDialog = new SaveFileDialog() {Filter = "Файлы БД (*.db)|*.db" };
+            var saveFileDialog = new SaveFileDialog {Filter = "Файлы БД (*.db)|*.db"};
             if (saveFileDialog.ShowDialog() == true)
             {
                 File.Copy(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName, saveFileDialog.FileName);

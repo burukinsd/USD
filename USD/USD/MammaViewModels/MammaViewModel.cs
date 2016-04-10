@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Documents;
 using System.Windows.Input;
 using LiteDB;
 using USD.Annotations;
@@ -18,13 +17,51 @@ namespace USD.MammaViewModels
 {
     public class MammaViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
+        private readonly BackgroundWorker _autoSaveBackgroundWorker;
         private readonly IMammaRepository _mammaRepository;
-
-        private MammaModel _model;
+        private bool _actualToPhase;
+        private string _additionalDesc;
+        private TissueQuanity _adipose;
+        private bool _areCysts;
+        private bool _areFocalFormations;
+        private string _birthYear;
+        private string _canalsExpandingDesc;
+        private string _cystConslusionDesc;
+        private ObservableCollection<CystViewModel> _cysts;
+        private DiffuseChanges _diffuseChanges;
+        private string _diffuseChangesFeatures;
+        private string _fio;
+        private DateTime _firstDayOfLastMenstrualCycle;
+        private FocalFormationConclusionPosition _focalFormationConclusionPosition;
+        private ObservableCollection<FocalFormationViewModel> _focalFormations;
+        private TissueQuanity _grandular;
+        private bool _isAdenosisConclusion;
+        private bool _isCanalsExpanded;
 
         private bool _isChanged;
+        private bool _isCystsConclusion;
+        private bool _isDeterminateLymphNodes;
+        private bool _isFocalFormationConclusion;
+        private bool _isInvolutionConclusion;
+        private bool _isNotPatalogyConclusion;
+        private bool _isSkinChanged;
+        private bool _isSpecificConclusion;
+        private bool _isValid;
         private DateTime _lastSaved = DateTime.Now;
-        private readonly BackgroundWorker _autoSaveBackgroundWorker;
+        private string _lymphNodesDesc;
+        private MammaSpecialists _mammaSpecialistsRecomendation;
+        private decimal? _maxThicknessGlandularLayer;
+        private string _menopauseText;
+
+        private MammaModel _model;
+        private PhisiologicalStatus _phisiologicalStatus;
+        private CystViewModel _selectedCyst;
+        private FocalFormationViewModel _selectedFocalFormation;
+        private string _skinChangedDesc;
+        private string _specificConclusionDesc;
+
+        private DateTime _visitDate;
+        private VisualizatioNippleArea _visualizatioNippleArea;
 
         public MammaViewModel(IMammaRepository mammaRepository)
         {
@@ -41,53 +78,6 @@ namespace USD.MammaViewModels
             _isChanged = false;
         }
 
-        private void AutoSaveBackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
-        {
-            BaseSave();
-        }
-
-        public void ApplyModel(ObjectId id)
-        {
-            _model = _mammaRepository.GetById(id);
-
-            VisitDate = _model.VisitDate;
-            FIO = _model.FIO;
-            BirthYear = _model.BirthYear;
-            PhisiologicalStatus = _model.PhisiologicalStatus;
-            FirstDayOfLastMenstrualCycle = _model.FirstDayOfLastMenstrualCycle;
-            MenopauseText = _model.MenopauseText;
-            IsSkinChanged = _model.IsSkinChanged;
-            SkinChangedDesc = _model.SkinChangedDesc;
-            TissueRatio = _model.TissueRatio;
-            MaxThicknessGlandularLayer = _model.MaxThicknessGlandularLayer;
-            ActualToPhase = _model.ActualToPhase;
-            IsCanalsExpanded = _model.IsCanalsExpanded;
-            CanalsExpandingDesc = _model.CanalsExpandingDesc;
-            DiffuseChanges = _model.DiffuseChanges;
-            DiffuseChangesFeatures = _model.DiffuseChangesFeatures;
-            VisualizatioNippleArea = _model.VisualizatioNippleArea;
-            AreCysts = _model.AreCysts;
-            AreFocalFormations = _model.AreFocalFormations;
-            FocalFormations = new ObservableCollection<FocalFormationViewModel>(_model.FocalFormations.Select(x => new FocalFormationViewModel(x)));
-            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
-            Cysts = new ObservableCollection<CystViewModel>(_model.Cysts.Select(x => new CystViewModel(x)));
-            Cysts.CollectionChanged += CystsOnCollectionChanged;
-            IsDeterminateLymphNodes = _model.IsDeterminateLymphNodes;
-            AdditionalDesc = _model.AdditionalDesc;
-            IsNotPatalogyConclusion = _model.IsNotPatalogyConclusion;
-            IsCystsConclusion = _model.IsCystsConclusion;
-            CystConslusionDesc = _model.CystConslusionDesc;
-            IsInvolutionConclusion = _model.IsInvolutionConclusion;
-            IsSpecificConclusion = _model.IsSpecificConclusion;
-            IsFocalFormationConclusion = _model.IsFocalFormationConclusion;
-            IsAdenosisConclusion = _model.IsAdenosisConclusion;
-            SpecificConclusionDesc = _model.SpecificConclusionDesc;
-            FocalFormationConclusionPosition = _model.FocalFormationConclusionPosition;
-            MammaSpecialistsRecomendation = _model.Recomendation;
-
-            _isChanged = false;
-        }
-
         public ObservableCollection<CystViewModel> Cysts
         {
             get { return _cysts; }
@@ -99,36 +89,7 @@ namespace USD.MammaViewModels
             }
         }
 
-        private void InitializeCommand()
-        {
-            SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged && _isValid);
-            GotoListCommand = new RelayCommand(x => ShowList());
-            ExportCommand = new RelayCommand(x => Export(), x => _isValid);
-
-            AddFFCommnad = new RelayCommand(x => AddFocalFormation(), x => AreFocalFormations);
-            DeleteFFComand = new RelayCommand(x => DeleteFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
-            CopyFFComand = new RelayCommand(x => CopyFocalFormation(), x => AreFocalFormations && SelectedFocalFormation != null);
-
-            AddCystCommnad = new RelayCommand(x => AddCyst(), x => AreCysts);
-            DeleteCystComand = new RelayCommand(x => DeleteCyst(), x => AreCysts && SelectedCyst != null);
-            CopyCystComand = new RelayCommand(x => CopyCyst(), x => AreCysts && SelectedCyst != null);
-        }
-
         public ICommand CopyCystComand { get; set; }
-
-        private void CopyCyst()
-        {
-            var newCyst = new CystViewModel()
-            {
-                Localization = SelectedCyst.Localization,
-                Structure = SelectedCyst.Structure,
-                Outlines = SelectedCyst.Outlines,
-                Echogenicity = SelectedCyst.Echogenicity,
-                Size = SelectedCyst.Size,
-                CDK = SelectedCyst.CDK
-            };
-            Cysts.Add(newCyst);
-        }
 
         public CystViewModel SelectedCyst
         {
@@ -141,99 +102,19 @@ namespace USD.MammaViewModels
             }
         }
 
-        private void DeleteCyst()
-        {
-            var index = Cysts.IndexOf(SelectedCyst);
-            Cysts.Remove(SelectedCyst);
-            SelectedCyst = Cysts[index < Cysts.Count ? index : 0];
-        }
-
-        private void AddCyst()
-        {
-            Cysts.Add(new CystViewModel());
-        }
-
         public ICommand DeleteCystComand { get; set; }
 
         public ICommand AddCystCommnad { get; set; }
 
-        private void CopyFocalFormation()
-        {
-            var newFocalFormation = new FocalFormationViewModel()
-            {
-                Localization = SelectedFocalFormation.Localization,
-                Structure = SelectedFocalFormation.Structure,
-                Outlines = SelectedFocalFormation.Outlines,
-                Echogenicity = SelectedFocalFormation.Echogenicity,
-                Size = SelectedFocalFormation.Size
-            };
-            FocalFormations.Add(newFocalFormation);
-        }
-
         public ICommand CopyFFComand { get; set; }
-
-        private void DeleteFocalFormation()
-        {
-            var index = FocalFormations.IndexOf(SelectedFocalFormation);
-            FocalFormations.Remove(SelectedFocalFormation);
-            SelectedFocalFormation = FocalFormations[index < FocalFormations.Count ? index : 0];
-        }
 
         public ICommand DeleteFFComand { get; set; }
 
-        private void AddFocalFormation()
-        {
-            FocalFormations.Add(new FocalFormationViewModel());
-        }
-
         public ICommand AddFFCommnad { get; set; }
-
-        private void Export()
-        {
-            if (_isChanged)
-            {
-                ManualSave();
-            }
-            MammaExporter.Export(_model);
-        }
 
         public ICommand ExportCommand { get; set; }
 
-        private void ShowList()
-        {
-            var listViewModel = new ListViewModel.ListViewModel(_mammaRepository);
-            var listView = new ListView(listViewModel);
-            listView.Show();
-        }
-
         public ICommand GotoListCommand { get; set; }
-
-        private void DefaultInitialize()
-        {
-            _model = new MammaModel();
-            VisitDate = DateTime.Today;
-            PhisiologicalStatus = PhisiologicalStatus.Normal;
-            FirstDayOfLastMenstrualCycle = DateTime.Today;
-            IsSkinChanged = false;
-            TissueRatio = TissueRatio.EnoughAll;
-            ActualToPhase = true;
-            IsCanalsExpanded = false;
-            DiffuseChanges = DiffuseChanges.Moderate;
-            VisualizatioNippleArea = VisualizatioNippleArea.ObliqueProjection;
-            AreCysts = false;
-            AreFocalFormations = false;
-            IsDeterminateLymphNodes = false;
-            IsNotPatalogyConclusion = true;
-            IsInvolutionConclusion = false;
-            IsCystsConclusion = false;
-            IsSpecificConclusion = false;
-            IsFocalFormationConclusion = false;
-            FocalFormationConclusionPosition = FocalFormationConclusionPosition.Left;
-            FocalFormations = new ObservableCollection<FocalFormationViewModel>();
-            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
-            Cysts = new ObservableCollection<CystViewModel>();
-            Cysts.CollectionChanged += CystsOnCollectionChanged;
-        }
 
         public bool IsFocalFormationConclusion
         {
@@ -258,190 +139,6 @@ namespace USD.MammaViewModels
                 OnPropertyChanged(nameof(FocalFormationConclusionPosition));
             }
         }
-
-        private void FocalFormationsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    (item as INotifyPropertyChanged).PropertyChanged += FocalFormationChanged;
-                }
-            }
-            if (e.OldItems != null)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    (item as INotifyPropertyChanged).PropertyChanged -= FocalFormationChanged;
-                }
-            }
-        }
-
-        private void FocalFormationChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(FocalFormations));
-        }
-
-        private void CystsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    (item as INotifyPropertyChanged).PropertyChanged += CystChanged;
-                }
-            }
-            if (e.OldItems != null)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    (item as INotifyPropertyChanged).PropertyChanged -= CystChanged;
-                }
-            }
-        }
-
-        private void CystChanged(object sender, PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(Cysts));
-        }
-
-
-        private void ManualSave()
-        {
-            BaseSave();
-
-            _lastSaved = DateTime.Now;
-            _isChanged = false;
-        }
-
-        private void BaseSave()
-        {
-            ApplyChangesToModel();
-
-            if (_model.Id != null)
-            {
-                _mammaRepository.Update(_model);
-            }
-            else
-            {
-                _model.Id = _mammaRepository.Add(_model);
-            }
-        }
-
-        private void ApplyChangesToModel()
-        {
-            _model.VisitDate = VisitDate;
-            _model.FIO = FIO;
-            _model.BirthYear = BirthYear;
-            _model.PhisiologicalStatus = PhisiologicalStatus;
-            _model.FirstDayOfLastMenstrualCycle = FirstDayOfLastMenstrualCycle;
-            _model.MenopauseText = MenopauseText;
-            _model.IsSkinChanged = IsSkinChanged;
-            _model.SkinChangedDesc = SkinChangedDesc;
-            _model.TissueRatio = TissueRatio;
-            _model.MaxThicknessGlandularLayer = MaxThicknessGlandularLayer;
-            _model.ActualToPhase = ActualToPhase;
-            _model.IsCanalsExpanded = IsCanalsExpanded;
-            _model.CanalsExpandingDesc = CanalsExpandingDesc;
-            _model.DiffuseChanges = DiffuseChanges;
-            _model.DiffuseChangesFeatures = DiffuseChangesFeatures;
-            _model.VisualizatioNippleArea = VisualizatioNippleArea;
-            _model.AreCysts = AreCysts;
-
-            if (_model.Cysts == null)
-            {
-                _model.Cysts = new List<CystModel>();
-            }
-
-            _model.Cysts.Clear();
-            if (Cysts != null && Cysts.Any())
-            {
-                _model.Cysts.AddRange(Cysts.Select(x => new CystModel()
-                {
-                    Localization = x.Localization,
-                    Outlines = x.Outlines,
-                    Echogenicity = x.Echogenicity,
-                    Structure = x.Structure,
-                    Size = x.Size,
-                    CDK = x.CDK,
-                    Form = x.Form
-                }));
-            }
-
-
-            _model.AreFocalFormations = AreFocalFormations;
-
-            if (_model.FocalFormations == null)
-            {
-                _model.FocalFormations = new List<FocalFormationModel>();
-            }
-
-            _model.FocalFormations.Clear();
-            if (FocalFormations != null && FocalFormations.Any())
-            {
-                _model.FocalFormations.AddRange(FocalFormations.Select(x => new FocalFormationModel()
-                {
-                    Localization = x.Localization,
-                    Outlines = x.Outlines,
-                    Echogenicity = x.Echogenicity,
-                    Structure = x.Structure,
-                    Size = x.Size,
-                    CDK = x.CDK,
-                    Form = x.Form
-                }));
-            }
-
-            _model.IsDeterminateLymphNodes = IsDeterminateLymphNodes;
-            _model.AdditionalDesc = AdditionalDesc;
-            _model.IsNotPatalogyConclusion = IsNotPatalogyConclusion;
-            _model.IsCystsConclusion = IsCystsConclusion;
-            _model.CystConslusionDesc = CystConslusionDesc;
-            _model.IsInvolutionConclusion = IsInvolutionConclusion;
-            _model.IsSpecificConclusion = IsSpecificConclusion;
-            _model.IsFocalFormationConclusion = IsFocalFormationConclusion;
-            _model.FocalFormationConclusionPosition = FocalFormationConclusionPosition;
-            _model.IsAdenosisConclusion = IsAdenosisConclusion;
-            _model.SpecificConclusionDesc = SpecificConclusionDesc;
-            _model.Recomendation = MammaSpecialistsRecomendation;
-        }
-
-        private DateTime _visitDate;
-        private string _fio;
-        private string _birthYear;
-        private PhisiologicalStatus _phisiologicalStatus;
-        private DateTime _firstDayOfLastMenstrualCycle;
-        private string _menopauseText;
-        private bool _isSkinChanged;
-        private string _skinChangedDesc;
-        private TissueRatio _tissueRatio;
-        private decimal? _leftThicknessGlandularLayer;
-        private decimal? _maxThicknessGlandularLayer;
-        private bool _isCanalsExpanded;
-        private string _canalsExpandingDesc;
-        private DiffuseChanges _diffuseChanges;
-        private string _diffuseChangesFeatures;
-        private VisualizatioNippleArea _visualizatioNippleArea;
-        private ObservableCollection<FocalFormationViewModel> _focalFormations;
-        private bool _areCysts;
-        private bool _areFocalFormations;
-        private bool _isDeterminateLymphNodes;
-        private string _lymphNodesDesc;
-        private string _additionalDesc;
-        private bool _isNotPatalogyConclusion;
-        private bool _isCystsConclusion;
-        private string _cystConslusionDesc;
-        private bool _isInvolutionConclusion;
-        private bool _isSpecificConclusion;
-        private string _specificConclusionDesc;
-        private MammaSpecialists _mammaSpecialistsRecomendation;
-        private FocalFormationViewModel _selectedFocalFormation;
-        private bool _actualToPhase;
-        private ObservableCollection<CystViewModel> _cysts;
-        private CystViewModel _selectedCyst;
-        private bool _isAdenosisConclusion;
-        private bool _isValid;
-        private bool _isFocalFormationConclusion;
-        private FocalFormationConclusionPosition _focalFormationConclusionPosition;
 
 
         public DateTime VisitDate
@@ -533,14 +230,25 @@ namespace USD.MammaViewModels
             }
         }
 
-        public TissueRatio TissueRatio
+        public TissueQuanity Grandular
         {
-            get { return _tissueRatio; }
+            get { return _grandular; }
             set
             {
-                if (value == _tissueRatio) return;
-                _tissueRatio = value;
-                OnPropertyChanged(nameof(TissueRatio));
+                if (value == _grandular) return;
+                _grandular = value;
+                OnPropertyChanged(nameof(Grandular));
+            }
+        }
+
+        public TissueQuanity Adipose
+        {
+            get { return _adipose; }
+            set
+            {
+                if (value == _adipose) return;
+                _adipose = value;
+                OnPropertyChanged(nameof(Adipose));
             }
         }
 
@@ -772,7 +480,6 @@ namespace USD.MammaViewModels
                 OnPropertyChanged(nameof(IsAdenosisConclusion));
                 if (value)
                     IsNotPatalogyConclusion = false;
-
             }
         }
 
@@ -813,7 +520,336 @@ namespace USD.MammaViewModels
 
         public ICommand SaveCommand { get; set; }
 
+        public string this[string columnName]
+        {
+            get
+            {
+                var error = string.Empty;
+                switch (columnName)
+                {
+                    case nameof(BirthYear):
+                        if (string.IsNullOrEmpty(BirthYear) || Convert.ToInt32(BirthYear) < 1900 ||
+                            Convert.ToInt32(BirthYear) > DateTime.Now.Year)
+                            error = "Нужно указать реальный год рождения.";
+                        break;
+                }
+                _isValid = string.IsNullOrEmpty(error);
+                return error;
+            }
+        }
+
+        public string Error { get; }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void AutoSaveBackgroundWorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        {
+            BaseSave();
+        }
+
+        public void ApplyModel(ObjectId id)
+        {
+            _model = _mammaRepository.GetById(id);
+
+            VisitDate = _model.VisitDate;
+            FIO = _model.FIO;
+            BirthYear = _model.BirthYear;
+            PhisiologicalStatus = _model.PhisiologicalStatus;
+            FirstDayOfLastMenstrualCycle = _model.FirstDayOfLastMenstrualCycle;
+            MenopauseText = _model.MenopauseText;
+            IsSkinChanged = _model.IsSkinChanged;
+            SkinChangedDesc = _model.SkinChangedDesc;
+            MaxThicknessGlandularLayer = _model.MaxThicknessGlandularLayer;
+            ActualToPhase = _model.ActualToPhase;
+            IsCanalsExpanded = _model.IsCanalsExpanded;
+            CanalsExpandingDesc = _model.CanalsExpandingDesc;
+            DiffuseChanges = _model.DiffuseChanges;
+            DiffuseChangesFeatures = _model.DiffuseChangesFeatures;
+            VisualizatioNippleArea = _model.VisualizatioNippleArea;
+            AreCysts = _model.AreCysts;
+            AreFocalFormations = _model.AreFocalFormations;
+            FocalFormations =
+                new ObservableCollection<FocalFormationViewModel>(
+                    _model.FocalFormations.Select(x => new FocalFormationViewModel(x)));
+            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
+            Cysts = new ObservableCollection<CystViewModel>(_model.Cysts.Select(x => new CystViewModel(x)));
+            Cysts.CollectionChanged += CystsOnCollectionChanged;
+            IsDeterminateLymphNodes = _model.IsDeterminateLymphNodes;
+            AdditionalDesc = _model.AdditionalDesc;
+            IsNotPatalogyConclusion = _model.IsNotPatalogyConclusion;
+            IsCystsConclusion = _model.IsCystsConclusion;
+            CystConslusionDesc = _model.CystConslusionDesc;
+            IsInvolutionConclusion = _model.IsInvolutionConclusion;
+            IsSpecificConclusion = _model.IsSpecificConclusion;
+            IsFocalFormationConclusion = _model.IsFocalFormationConclusion;
+            IsAdenosisConclusion = _model.IsAdenosisConclusion;
+            SpecificConclusionDesc = _model.SpecificConclusionDesc;
+            FocalFormationConclusionPosition = _model.FocalFormationConclusionPosition;
+            MammaSpecialistsRecomendation = _model.Recomendation;
+            Grandular = _model.Grandular;
+            Adipose = _model.Adipose;
+
+            _isChanged = false;
+        }
+
+        private void InitializeCommand()
+        {
+            SaveCommand = new RelayCommand(x => ManualSave(), x => _isChanged && _isValid);
+            GotoListCommand = new RelayCommand(x => ShowList());
+            ExportCommand = new RelayCommand(x => Export(), x => _isValid);
+
+            AddFFCommnad = new RelayCommand(x => AddFocalFormation(), x => AreFocalFormations);
+            DeleteFFComand = new RelayCommand(x => DeleteFocalFormation(),
+                x => AreFocalFormations && SelectedFocalFormation != null);
+            CopyFFComand = new RelayCommand(x => CopyFocalFormation(),
+                x => AreFocalFormations && SelectedFocalFormation != null);
+
+            AddCystCommnad = new RelayCommand(x => AddCyst(), x => AreCysts);
+            DeleteCystComand = new RelayCommand(x => DeleteCyst(), x => AreCysts && SelectedCyst != null);
+            CopyCystComand = new RelayCommand(x => CopyCyst(), x => AreCysts && SelectedCyst != null);
+        }
+
+        private void CopyCyst()
+        {
+            var newCyst = new CystViewModel
+            {
+                Localization = SelectedCyst.Localization,
+                Structure = SelectedCyst.Structure,
+                Outlines = SelectedCyst.Outlines,
+                Echogenicity = SelectedCyst.Echogenicity,
+                Size = SelectedCyst.Size,
+                CDK = SelectedCyst.CDK
+            };
+            Cysts.Add(newCyst);
+        }
+
+        private void DeleteCyst()
+        {
+            var index = Cysts.IndexOf(SelectedCyst);
+            Cysts.Remove(SelectedCyst);
+            SelectedCyst = Cysts[index < Cysts.Count ? index : 0];
+        }
+
+        private void AddCyst()
+        {
+            Cysts.Add(new CystViewModel());
+        }
+
+        private void CopyFocalFormation()
+        {
+            var newFocalFormation = new FocalFormationViewModel
+            {
+                Localization = SelectedFocalFormation.Localization,
+                Structure = SelectedFocalFormation.Structure,
+                Outlines = SelectedFocalFormation.Outlines,
+                Echogenicity = SelectedFocalFormation.Echogenicity,
+                Size = SelectedFocalFormation.Size
+            };
+            FocalFormations.Add(newFocalFormation);
+        }
+
+        private void DeleteFocalFormation()
+        {
+            var index = FocalFormations.IndexOf(SelectedFocalFormation);
+            FocalFormations.Remove(SelectedFocalFormation);
+            SelectedFocalFormation = FocalFormations[index < FocalFormations.Count ? index : 0];
+        }
+
+        private void AddFocalFormation()
+        {
+            FocalFormations.Add(new FocalFormationViewModel());
+        }
+
+        private void Export()
+        {
+            if (_isChanged)
+            {
+                ManualSave();
+            }
+            MammaExporter.Export(_model);
+        }
+
+        private void ShowList()
+        {
+            var listViewModel = new ListViewModel.ListViewModel(_mammaRepository);
+            var listView = new ListView(listViewModel);
+            listView.Show();
+        }
+
+        private void DefaultInitialize()
+        {
+            _model = new MammaModel();
+            VisitDate = DateTime.Today;
+            PhisiologicalStatus = PhisiologicalStatus.Normal;
+            FirstDayOfLastMenstrualCycle = DateTime.Today;
+            IsSkinChanged = false;
+            Grandular = TissueQuanity.Enogh;
+            Adipose = TissueQuanity.Many;
+            ActualToPhase = true;
+            IsCanalsExpanded = false;
+            DiffuseChanges = DiffuseChanges.Moderate;
+            VisualizatioNippleArea = VisualizatioNippleArea.ObliqueProjection;
+            AreCysts = false;
+            AreFocalFormations = false;
+            IsDeterminateLymphNodes = false;
+            IsNotPatalogyConclusion = true;
+            IsInvolutionConclusion = false;
+            IsCystsConclusion = false;
+            IsSpecificConclusion = false;
+            IsFocalFormationConclusion = false;
+            FocalFormationConclusionPosition = FocalFormationConclusionPosition.Left;
+            FocalFormations = new ObservableCollection<FocalFormationViewModel>();
+            FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
+            Cysts = new ObservableCollection<CystViewModel>();
+            Cysts.CollectionChanged += CystsOnCollectionChanged;
+        }
+
+        private void FocalFormationsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged += FocalFormationChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged -= FocalFormationChanged;
+                }
+            }
+        }
+
+        private void FocalFormationChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FocalFormations));
+        }
+
+        private void CystsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged += CystChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged -= CystChanged;
+                }
+            }
+        }
+
+        private void CystChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(Cysts));
+        }
+
+
+        private void ManualSave()
+        {
+            BaseSave();
+
+            _lastSaved = DateTime.Now;
+            _isChanged = false;
+        }
+
+        private void BaseSave()
+        {
+            ApplyChangesToModel();
+
+            if (_model.Id != null)
+            {
+                _mammaRepository.Update(_model);
+            }
+            else
+            {
+                _model.Id = _mammaRepository.Add(_model);
+            }
+        }
+
+        private void ApplyChangesToModel()
+        {
+            _model.VisitDate = VisitDate;
+            _model.FIO = FIO;
+            _model.BirthYear = BirthYear;
+            _model.PhisiologicalStatus = PhisiologicalStatus;
+            _model.FirstDayOfLastMenstrualCycle = FirstDayOfLastMenstrualCycle;
+            _model.MenopauseText = MenopauseText;
+            _model.IsSkinChanged = IsSkinChanged;
+            _model.SkinChangedDesc = SkinChangedDesc;
+            _model.Grandular = Grandular;
+            _model.Adipose = Adipose;
+            _model.MaxThicknessGlandularLayer = MaxThicknessGlandularLayer;
+            _model.ActualToPhase = ActualToPhase;
+            _model.IsCanalsExpanded = IsCanalsExpanded;
+            _model.CanalsExpandingDesc = CanalsExpandingDesc;
+            _model.DiffuseChanges = DiffuseChanges;
+            _model.DiffuseChangesFeatures = DiffuseChangesFeatures;
+            _model.VisualizatioNippleArea = VisualizatioNippleArea;
+            _model.AreCysts = AreCysts;
+
+            if (_model.Cysts == null)
+            {
+                _model.Cysts = new List<CystModel>();
+            }
+
+            _model.Cysts.Clear();
+            if (Cysts != null && Cysts.Any())
+            {
+                _model.Cysts.AddRange(Cysts.Select(x => new CystModel
+                {
+                    Localization = x.Localization,
+                    Outlines = x.Outlines,
+                    Echogenicity = x.Echogenicity,
+                    Structure = x.Structure,
+                    Size = x.Size,
+                    CDK = x.CDK,
+                    Form = x.Form
+                }));
+            }
+
+
+            _model.AreFocalFormations = AreFocalFormations;
+
+            if (_model.FocalFormations == null)
+            {
+                _model.FocalFormations = new List<FocalFormationModel>();
+            }
+
+            _model.FocalFormations.Clear();
+            if (FocalFormations != null && FocalFormations.Any())
+            {
+                _model.FocalFormations.AddRange(FocalFormations.Select(x => new FocalFormationModel
+                {
+                    Localization = x.Localization,
+                    Outlines = x.Outlines,
+                    Echogenicity = x.Echogenicity,
+                    Structure = x.Structure,
+                    Size = x.Size,
+                    CDK = x.CDK,
+                    Form = x.Form
+                }));
+            }
+
+            _model.IsDeterminateLymphNodes = IsDeterminateLymphNodes;
+            _model.AdditionalDesc = AdditionalDesc;
+            _model.IsNotPatalogyConclusion = IsNotPatalogyConclusion;
+            _model.IsCystsConclusion = IsCystsConclusion;
+            _model.CystConslusionDesc = CystConslusionDesc;
+            _model.IsInvolutionConclusion = IsInvolutionConclusion;
+            _model.IsSpecificConclusion = IsSpecificConclusion;
+            _model.IsFocalFormationConclusion = IsFocalFormationConclusion;
+            _model.FocalFormationConclusionPosition = FocalFormationConclusionPosition;
+            _model.IsAdenosisConclusion = IsAdenosisConclusion;
+            _model.SpecificConclusionDesc = SpecificConclusionDesc;
+            _model.Recomendation = MammaSpecialistsRecomendation;
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -827,24 +863,5 @@ namespace USD.MammaViewModels
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                var error = String.Empty;
-                switch (columnName)
-                {
-                    case nameof(BirthYear):
-                        if (String.IsNullOrEmpty(BirthYear) || Convert.ToInt32(BirthYear) < 1900 || Convert.ToInt32(BirthYear) > DateTime.Now.Year)
-                            error = "Нужно указать реальный год рождения.";
-                        break;
-                }
-                _isValid = String.IsNullOrEmpty(error); 
-                return error;
-            }
-        }
-
-        public string Error { get; }
     }
 }

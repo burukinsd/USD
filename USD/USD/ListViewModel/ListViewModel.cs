@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -12,12 +11,12 @@ using USD.ViewTools;
 
 namespace USD.ListViewModel
 {
-    public class ListViewModel:INotifyPropertyChanged
+    public class ListViewModel : INotifyPropertyChanged
     {
         private readonly IMammaRepository _mammaRepository;
+        private ObservableCollection<ItemListViewModel> _list;
         private List<ItemListViewModel> _screaningList;
         private string _searchPattern;
-        private ObservableCollection<ItemListViewModel> _list;
         private ItemListViewModel _selectedItem;
 
         public ListViewModel(IMammaRepository mammaRepository)
@@ -32,62 +31,9 @@ namespace USD.ListViewModel
 
         public ICommand EditCommand { get; set; }
 
-        private void Export()
-        {
-            SelectedItem.Export();
-        }
-
         public ICommand ExportCommand { get; set; }
 
-        private void Delete()
-        {
-            var dilogResult =
-                MessageBox.Show(
-                    $"Вы уверены, что хотите удалить исследование \"{SelectedItem.FIO} {SelectedItem.BirthYear} г.р.\" от {SelectedItem.VisitDate.ToShortDateString()}?",
-                    "Список исследований", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
-
-            if (dilogResult == MessageBoxResult.Yes)
-            {
-                _mammaRepository.Delete(SelectedItem.Id);
-
-                _screaningList.Remove(SelectedItem);
-
-                SelectedItem = null;
-
-                FilterData();
-            }
-        }
-
         public ICommand DeleteCommand { get; set; }
-
-        public void LoadData()
-        {
-            _screaningList = _mammaRepository.GetAll().Select(x => new ItemListViewModel(x)).ToList();
-
-            FilterData();
-        }
-
-        private void FilterData()
-        {
-            if (SelectedItem != null && !IsGood(SelectedItem, SearchPattern))
-            {
-                SelectedItem = null;
-            }
-
-            List = !String.IsNullOrEmpty(SearchPattern) 
-                ? new ObservableCollection<ItemListViewModel>(_screaningList.Where(x => IsGood(x, SearchPattern))) 
-                : new ObservableCollection<ItemListViewModel>(_screaningList);
-
-        }
-
-        private bool IsGood(ItemListViewModel item, string serchPattern)
-        {
-            return (item.FIO?.ToLower().Contains(serchPattern.ToLower()) ?? false)
-                    || (item.BirthYear?.Contains(serchPattern) ?? false) 
-                    || (item.Conclusion?.ToLower().Contains(serchPattern.ToLower()) ?? false)
-                    ;
-
-        }
 
 
         public string SearchPattern
@@ -125,6 +71,57 @@ namespace USD.ListViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void Export()
+        {
+            SelectedItem.Export();
+        }
+
+        private void Delete()
+        {
+            var dilogResult =
+                MessageBox.Show(
+                    $"Вы уверены, что хотите удалить исследование \"{SelectedItem.FIO} {SelectedItem.BirthYear} г.р.\" от {SelectedItem.VisitDate.ToShortDateString()}?",
+                    "Список исследований", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+
+            if (dilogResult == MessageBoxResult.Yes)
+            {
+                _mammaRepository.Delete(SelectedItem.Id);
+
+                _screaningList.Remove(SelectedItem);
+
+                SelectedItem = null;
+
+                FilterData();
+            }
+        }
+
+        public void LoadData()
+        {
+            _screaningList = _mammaRepository.GetAll().Select(x => new ItemListViewModel(x)).ToList();
+
+            FilterData();
+        }
+
+        private void FilterData()
+        {
+            if (SelectedItem != null && !IsGood(SelectedItem, SearchPattern))
+            {
+                SelectedItem = null;
+            }
+
+            List = !string.IsNullOrEmpty(SearchPattern)
+                ? new ObservableCollection<ItemListViewModel>(_screaningList.Where(x => IsGood(x, SearchPattern)))
+                : new ObservableCollection<ItemListViewModel>(_screaningList);
+        }
+
+        private bool IsGood(ItemListViewModel item, string serchPattern)
+        {
+            return (item.FIO?.ToLower().Contains(serchPattern.ToLower()) ?? false)
+                   || (item.BirthYear?.Contains(serchPattern) ?? false)
+                   || (item.Conclusion?.ToLower().Contains(serchPattern.ToLower()) ?? false)
+                ;
+        }
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

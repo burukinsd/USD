@@ -3,13 +3,14 @@ using System.Windows.Input;
 
 namespace USD.ViewTools
 {
-    class RelayCommand : ICommand
+    internal class RelayCommand : ICommand
     {
         public RelayCommand(Action<object> action, Predicate<object> canExecutePredicate = null)
         {
             ExecuteDelegate = action;
             CanExecuteDelegate = canExecutePredicate;
         }
+
         public Predicate<object> CanExecuteDelegate { get; set; }
         public Action<object> ExecuteDelegate { get; set; }
 
@@ -21,11 +22,13 @@ namespace USD.ViewTools
             }
             return true;
         }
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
+
         public void Execute(object parameter)
         {
             if (ExecuteDelegate != null)

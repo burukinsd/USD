@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using USD.Annotations;
@@ -6,8 +5,17 @@ using USD.MammaModels;
 
 namespace USD.MammaViewModels
 {
-    public class CystViewModel:INotifyPropertyChanged
+    public class CystViewModel : INotifyPropertyChanged
     {
+        private CDK _cdk;
+        private Echogenicity _echogenicity;
+        private FormationForm _form;
+        private string _localization;
+
+        private OutlinesType _outlines;
+        private string _size;
+        private Structure _structure;
+
         public CystViewModel()
         {
             Outlines = OutlinesType.SmothClear;
@@ -38,14 +46,6 @@ namespace USD.MammaViewModels
                 OnPropertyChanged(nameof(Form));
             }
         }
-
-        private OutlinesType _outlines;
-        private string _localization;
-        private string _size;
-        private Echogenicity _echogenicity;
-        private Structure _structure;
-        private CDK _cdk;
-        private FormationForm _form;
 
         public CDK CDK
         {

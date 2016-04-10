@@ -9,10 +9,10 @@ namespace USD.DAL
 {
     public class LiteDbWraper : IDbWraper
     {
-        private readonly Dictionary<Type, string> _collectionsDictionary = new Dictionary<Type, string>()
+        private readonly Dictionary<Type, string> _collectionsDictionary = new Dictionary<Type, string>
         {
-            { typeof(MammaModel), "screenings"}
-        }; 
+            {typeof (MammaModel), "screenings"}
+        };
 
         public ObjectId Add<T>(T item) where T : new()
         {
@@ -20,7 +20,7 @@ namespace USD.DAL
             {
                 var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
-               return col.Insert(item);
+                return col.Insert(item);
             }
         }
 
@@ -28,7 +28,7 @@ namespace USD.DAL
         {
             using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
-                var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
+                var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
                 return col.FindById(id);
             }
@@ -38,7 +38,7 @@ namespace USD.DAL
         {
             using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
-                var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
+                var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
                 col.Delete(id);
             }
@@ -48,7 +48,7 @@ namespace USD.DAL
         {
             using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
-                var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
+                var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
                 col.Update(item);
             }
@@ -58,7 +58,7 @@ namespace USD.DAL
         {
             using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
-                var col = db.GetCollection<T>(_collectionsDictionary[typeof(T)]);
+                var col = db.GetCollection<T>(_collectionsDictionary[typeof (T)]);
 
                 return col.FindAll().ToList();
             }

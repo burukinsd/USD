@@ -5,7 +5,7 @@ using USD.MammaModels;
 
 namespace USD.DAL
 {
-    class MammaRepository : IMammaRepository
+    internal class MammaRepository : IMammaRepository
     {
         private readonly IDbWraper _dbwraper;
 

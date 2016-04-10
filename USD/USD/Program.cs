@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Windows;
 using LiteDB;
 using Microsoft.Win32;
@@ -19,7 +20,7 @@ namespace USD
     public class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             EnsureDbFile();
             DbMigration();
@@ -71,7 +72,7 @@ namespace USD
             using (var db = new LiteDatabase(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName))
             {
                 if (!db.CollectionExists("screenings")) return;
-                
+
                 var col = db.GetCollection("screenings");
                 IEnumerable<BsonDocument> items = col.FindAll().ToList();
                 foreach (var item in items)
@@ -88,7 +89,7 @@ namespace USD
                         }
                         if (size.IsNull)
                         {
-                            form.AsDocument.Set("Size", String.Empty);
+                            form.AsDocument.Set("Size", string.Empty);
                             isNeedUpdate = true;
                         }
 
@@ -145,19 +146,19 @@ namespace USD
             }
             catch (Exception ex)
             {
-                MailMessage mail = new MailMessage
+                var mail = new MailMessage
                 {
                     From = new MailAddress("usd@burukinsd.ru", "УЗД ошибка"),
                     Subject = "Ошибка в программе УЗИ.",
-                    SubjectEncoding = System.Text.Encoding.UTF8,
-                    BodyEncoding = System.Text.Encoding.UTF8,
+                    SubjectEncoding = Encoding.UTF8,
+                    BodyEncoding = Encoding.UTF8,
                     IsBodyHtml = false,
                     Body = JsonConvert.SerializeObject(ex),
                     Priority = MailPriority.High
                 };
                 mail.Attachments.Add(new Attachment(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName));
                 mail.To.Add("burukinsd@gmail.com");
-                using (SmtpClient client = new SmtpClient()
+                using (var client = new SmtpClient
                 {
                     Host = "smtp.yandex.ru",
                     Port = 587,

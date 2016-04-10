@@ -10,15 +10,15 @@
         Background="#EFECEC">
     <Grid Margin="30,0,15,0">
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
-            <RowDefinition MaxHeight="42" MinHeight="42"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition MaxHeight="42" MinHeight="42"></RowDefinition>
+            <RowDefinition MaxHeight="28" MinHeight="28" />
+            <RowDefinition MaxHeight="42" MinHeight="42" />
+            <RowDefinition />
+            <RowDefinition MaxHeight="42" MinHeight="42" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.Row="0" >
+        <DockPanel Grid.Row="0">
             <Label>Поиск:</Label>
             <TextBox Margin="5,3">
                 <TextBox.Text>
@@ -30,16 +30,19 @@
             <Button MinWidth="100" Margin="10,3" Command="{Binding ExportCommand}">Открыть в Word</Button>
             <Button MinWidth="100" Margin="10,3" Command="{Binding DeleteCommand}">Удалить</Button>
         </StackPanel>
-        <DataGrid Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False" CanUserSortColumns="True" CanUserResizeRows="True"
-                  ItemsSource="{Binding List}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}" AutoGenerateColumns="False" HorizontalScrollBarVisibility="Hidden" >
+        <DataGrid Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" IsManipulationEnabled="False"
+                  CanUserSortColumns="True" CanUserResizeRows="True"
+                  ItemsSource="{Binding List}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+                  AutoGenerateColumns="False" HorizontalScrollBarVisibility="Hidden">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата визита" Binding="{Binding VisitDate, StringFormat={}{0:dd.MM.yyyy}}"></DataGridTextColumn>
-                <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Год рождения" Binding="{Binding BirthYear}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Дата визита" Binding="{Binding VisitDate, StringFormat={}{0:dd.MM.yyyy}}" />
+                <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" />
+                <DataGridTextColumn Header="Год рождения" Binding="{Binding BirthYear}" />
                 <DataGridTemplateColumn Header="Заключение" Width="100*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Conclusion}" TextWrapping="WrapWithOverflow" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Text="{Binding Conclusion}" TextWrapping="WrapWithOverflow"
+                                       VerticalAlignment="Center" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

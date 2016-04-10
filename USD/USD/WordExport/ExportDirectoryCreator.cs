@@ -1,6 +1,4 @@
-using System;
 using System.IO;
-using IWshRuntimeLibrary;
 
 namespace USD.WordExport
 {

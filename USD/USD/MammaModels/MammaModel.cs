@@ -8,18 +8,26 @@ namespace USD.MammaModels
     {
         public ObjectId Id { get; set; }
         public DateTime VisitDate { get; set; }
-        public string FIO{ get; set; }
-        public string BirthYear{ get; set; }
-        public PhisiologicalStatus PhisiologicalStatus{ get; set; }
-        public DateTime FirstDayOfLastMenstrualCycle{ get; set; }
-        public string MenopauseText{ get; set; }
-        public bool IsSkinChanged{ get; set; }
-        public string SkinChangedDesc{ get; set; }
-        public TissueRatio TissueRatio{ get; set; }
+        public string FIO { get; set; }
+        public string BirthYear { get; set; }
+        public PhisiologicalStatus PhisiologicalStatus { get; set; }
+        public DateTime FirstDayOfLastMenstrualCycle { get; set; }
+        public string MenopauseText { get; set; }
+        public bool IsSkinChanged { get; set; }
+        public string SkinChangedDesc { get; set; }
+
+        [Obsolete("Переехало в отдельные поля по тканям")]
+        public TissueRatio TissueRatio { get; set; }
+
+        public TissueQuanity Grandular { get; set; }
+        public TissueQuanity Adipose { get; set; }
+
         [Obsolete("Переехало на одно поле MaxThicknessGlandularLayer")]
-        public decimal? LeftThicknessGlandularLayer{ get; set; }
+        public decimal? LeftThicknessGlandularLayer { get; set; }
+
         [Obsolete("Переехало на одно поле MaxThicknessGlandularLayer")]
-        public decimal? RightThicknessGlandularLayer{ get; set; }
+        public decimal? RightThicknessGlandularLayer { get; set; }
+
         public decimal? MaxThicknessGlandularLayer { get; set; }
         public bool ActualToPhase { get; set; } = true;
         public bool IsCanalsExpanded { get; set; }

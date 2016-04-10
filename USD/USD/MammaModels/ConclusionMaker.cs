@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Novacode;
 
@@ -16,7 +15,7 @@ namespace USD.MammaModels
             if (mammaModel.IsCystsConclusion)
             {
                 conclusionStringBuilder.Append("УЗ признаки фиброзно-кистозной болезни");
-                if (!String.IsNullOrEmpty(mammaModel.CystConslusionDesc))
+                if (!string.IsNullOrEmpty(mammaModel.CystConslusionDesc))
                 {
                     conclusionStringBuilder.Append(": ");
                     conclusionStringBuilder.Append(mammaModel.CystConslusionDesc);
@@ -41,7 +40,7 @@ namespace USD.MammaModels
             }
             if (mammaModel.IsSpecificConclusion)
             {
-                conclusionStringBuilder.Append(mammaModel.SpecificConclusionDesc ?? String.Empty);
+                conclusionStringBuilder.Append(mammaModel.SpecificConclusionDesc ?? string.Empty);
             }
 
             return conclusionStringBuilder.ToString();

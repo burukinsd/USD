@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
@@ -7,15 +8,15 @@ namespace USD.ViewTools
 {
     public class RowToIndexConverter : MarkupExtension, IValueConverter
     {
-        static RowToIndexConverter converter;
+        private static RowToIndexConverter converter;
 
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DataGridRow row = value as DataGridRow;
+            var row = value as DataGridRow;
             return row?.GetIndex() + 1 ?? -1;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

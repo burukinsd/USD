@@ -8,13 +8,13 @@ using USD.WordExport;
 
 namespace USD.ListViewModel
 {
-    public class ItemListViewModel:INotifyPropertyChanged
+    public class ItemListViewModel : INotifyPropertyChanged
     {
-        private string _conclusion;
+        private readonly MammaModel _model;
         private string _birthYear;
+        private string _conclusion;
         private string _fio;
         private DateTime _visitDate;
-        private readonly MammaModel _model;
 
         public ItemListViewModel(MammaModel mammaModel)
         {

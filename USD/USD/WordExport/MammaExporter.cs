@@ -19,13 +19,13 @@ namespace USD.WordExport
 
             try
             {
-                using (DocX document = DocX.Load(@"Templates\MammaTemplate.docx"))
+                using (var document = DocX.Load(@"Templates\MammaTemplate.docx"))
                 {
                     document.ReplaceText("%VisitDate%", model.VisitDate.ToShortDateString());
 
-                    document.ReplaceText("%FIO%", model.FIO ?? String.Empty);
+                    document.ReplaceText("%FIO%", model.FIO ?? string.Empty);
 
-                    document.ReplaceText("%BirthYear%", model.BirthYear ?? String.Empty);
+                    document.ReplaceText("%BirthYear%", model.BirthYear ?? string.Empty);
 
                     document.ReplaceText("%Status%", MakeStatus(model));
 
@@ -49,11 +49,15 @@ namespace USD.WordExport
 
                     document.ReplaceText("%LymphNodes%", MakeLymphNodes(model));
 
-                    document.ReplaceText("%AdditionalInfo%", String.IsNullOrEmpty(model.AdditionalDesc) ? String.Empty : $"\r\n{model.AdditionalDesc}");
+                    document.ReplaceText("%AdditionalInfo%",
+                        string.IsNullOrEmpty(model.AdditionalDesc) ? string.Empty : $"\r\n{model.AdditionalDesc}");
 
                     document.ReplaceText("%Conclusion%", ConclusionMaker.MakeConclusion(model));
 
-                    document.ReplaceText("%Recomendation%", model.Recomendation == MammaSpecialists.None ? String.Empty : $"\r\nРекомендована консультация {model.Recomendation.EnumDescription()}, маммография");
+                    document.ReplaceText("%Recomendation%",
+                        model.Recomendation == MammaSpecialists.None
+                            ? string.Empty
+                            : $"\r\nРекомендована консультация {model.Recomendation.EnumDescription()}, маммография");
 
                     document.SaveAs(fileFullPath);
                 }
@@ -74,8 +78,7 @@ namespace USD.WordExport
                 return model.ActualToPhase
                     ? "\r\nСтроение соответствует фазе менструального цикла."
                     : "\r\nСтроение не соответствует фазе менструального цикла.";
-            else
-                return String.Empty;
+            return string.Empty;
         }
 
         private static string MakeGrandular(MammaModel model)
@@ -84,13 +87,10 @@ namespace USD.WordExport
             {
                 return $"{model.MaxThicknessGlandularLayer} мм.";
             }
-            else
-            {
 #pragma warning disable 618
-                var val = Math.Max(model.LeftThicknessGlandularLayer ?? 0, model.RightThicknessGlandularLayer ?? 0);
+            var val = Math.Max(model.LeftThicknessGlandularLayer ?? 0, model.RightThicknessGlandularLayer ?? 0);
 #pragma warning restore 618
-                return $"{val} мм.";
-            }
+            return $"{val} мм.";
         }
 
         private static string MakeLymphNodes(MammaModel model)
@@ -99,7 +99,7 @@ namespace USD.WordExport
             if (model.IsDeterminateLymphNodes)
             {
                 builder.Append("определяются: ");
-                builder.Append(model.LymphNodesDesc ?? String.Empty);
+                builder.Append(model.LymphNodesDesc ?? string.Empty);
             }
             else
             {
@@ -123,12 +123,12 @@ namespace USD.WordExport
 
                     innerBuilder.Append(number);
                     innerBuilder.Append(". ");
-                    innerBuilder.Append(formation.Localization ?? String.Empty);
+                    innerBuilder.Append(formation.Localization ?? string.Empty);
                     innerBuilder.Append(", ");
                     innerBuilder.Append("форма: ");
                     innerBuilder.Append(formation.Form.EnumDescription());
                     innerBuilder.Append(", ");
-                    innerBuilder.Append(formation.Size ?? String.Empty);
+                    innerBuilder.Append(formation.Size ?? string.Empty);
                     innerBuilder.Append("мм, ");
                     innerBuilder.Append("контуры ");
                     innerBuilder.Append(formation.Outlines.EnumDescription());
@@ -157,10 +157,10 @@ namespace USD.WordExport
             var builder = new StringBuilder();
             if (model.AreCysts)
             {
-                if (!String.IsNullOrEmpty(model.CystsDesc))
+                if (!string.IsNullOrEmpty(model.CystsDesc))
                 {
                     builder.Append("выявляются ");
-                    builder.Append(model.CystsDesc ?? String.Empty);
+                    builder.Append(model.CystsDesc ?? string.Empty);
                     if (model.CystsDesc != null && !model.CystsDesc.EndsWith("."))
                     {
                         builder.Append(".");
@@ -178,12 +178,12 @@ namespace USD.WordExport
 
                         innerBuilder.Append(number);
                         innerBuilder.Append(". ");
-                        innerBuilder.Append(cyst.Localization ?? String.Empty);
+                        innerBuilder.Append(cyst.Localization ?? string.Empty);
                         innerBuilder.Append(", ");
                         innerBuilder.Append("форма: ");
                         innerBuilder.Append(cyst.Form.EnumDescription());
                         innerBuilder.Append(", ");
-                        innerBuilder.Append(cyst.Size ?? String.Empty);
+                        innerBuilder.Append(cyst.Size ?? string.Empty);
                         innerBuilder.Append("мм, ");
                         innerBuilder.Append("контуры ");
                         innerBuilder.Append(cyst.Outlines.EnumDescription());
@@ -231,26 +231,10 @@ namespace USD.WordExport
         private static string MakeTissue(MammaModel model)
         {
             var builder = new StringBuilder();
-            switch (model.TissueRatio)
-            {
-                case TissueRatio.MoreGlandularLessAdipose:
-                    builder.Append("много железистой и мало жировой (подкожной).");
-                    break;
-                case TissueRatio.EnoughGlandularMoreAdipose:
-                    builder.Append("достаточно железистой и много жировой (подкожной и в центральном отделе).");
-                    break;
-                case TissueRatio.LessGlandular:
-                    builder.Append("мало железистой в виде единичных включений между жировой клетчаткой.");
-                    break;
-                case TissueRatio.MoreAdipose:
-                    builder.Append("много жировой (подкожной, в центральнх, задних отделах).");
-                    break;
-                case TissueRatio.EnoughAll:
-                    builder.Append("достаточно железистой и жировой.");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            builder.Append(model.Adipose.EnumDescription());
+            builder.Append(" жировой, ");
+            builder.Append(model.Grandular.EnumDescription());
+            builder.Append(" железистой. ");
             return builder.ToString();
         }
 
@@ -260,7 +244,7 @@ namespace USD.WordExport
             if (model.IsSkinChanged)
             {
                 builder.Append("изменены, ");
-                builder.Append(model.SkinChangedDesc ?? String.Empty);
+                builder.Append(model.SkinChangedDesc ?? string.Empty);
             }
             else
             {
@@ -275,7 +259,7 @@ namespace USD.WordExport
             if (model.IsCanalsExpanded)
             {
                 builder.Append("расширены до");
-                builder.Append(model.CanalsExpandingDesc ?? String.Empty);
+                builder.Append(model.CanalsExpandingDesc ?? string.Empty);
             }
             else
             {
@@ -301,7 +285,7 @@ namespace USD.WordExport
                     break;
                 case PhisiologicalStatus.Menopause:
                     builder.Append("Менопауза: ");
-                    builder.Append(model.MenopauseText ?? String.Empty);
+                    builder.Append(model.MenopauseText ?? string.Empty);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -3,13 +3,11 @@ using USD.ViewTools;
 
 namespace USD.MammaModels
 {
-    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
+    [TypeConverter(typeof (EnumDescriptionTypeConverter))]
     public enum Structure
     {
-        [Description("однородная")]
-        Homogenous,
+        [Description("однородная")] Homogenous,
 
-        [Description("неоднородная")]
-        NonHomogenous
+        [Description("неоднородная")] NonHomogenous
     }
 }

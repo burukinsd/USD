@@ -3,22 +3,17 @@ using USD.ViewTools;
 
 namespace USD.MammaModels
 {
-    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
+    [TypeConverter(typeof (EnumDescriptionTypeConverter))]
     public enum OutlinesType
     {
-        [Description("ровные четкие")]
-        SmothClear,
+        [Description("ровные четкие")] SmothClear,
 
-        [Description("ровные нечеткие")]
-        SmothNotClear,
+        [Description("ровные нечеткие")] SmothNotClear,
 
-        [Description("неровные четкие")]
-        NotSmothClear,
+        [Description("неровные четкие")] NotSmothClear,
 
-        [Description("неровные нечеткие")]
-        NotSmothNotClear,
+        [Description("неровные нечеткие")] NotSmothNotClear,
 
-        [Description("не определяются")]
-        NotDetermined
+        [Description("не определяются")] NotDetermined
     }
 }
