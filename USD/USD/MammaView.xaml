@@ -104,6 +104,7 @@
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
+                    <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
 
                     <RowDefinition MaxHeight="28" MinHeight="28"></RowDefinition>
                 </Grid.RowDefinitions>
@@ -265,12 +266,14 @@
                           LoadingRow="DataGrid_LoadingRow" DataGridCell.Selected="DataGrid_GotFocus"
                           ColumnWidth="*" VerticalScrollBarVisibility="Visible" MaxHeight="112">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Локализация" Width="38*" Binding="{Binding Localization}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Локализация" Width="35*" Binding="{Binding Localization}"></DataGridTextColumn>
+                        <DataGridComboBoxColumn Header="Форма" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:FormationForm}}}" SelectedItemBinding="{Binding Form}"></DataGridComboBoxColumn>
                         <DataGridTextColumn Header="Размер, мм" Width="7*" Binding="{Binding Size}"></DataGridTextColumn>
                         <DataGridComboBoxColumn Header="Контуры" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:OutlinesType}}}" SelectedItemBinding="{Binding Outlines}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Эхогенность" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Echogenicity}}}" SelectedItemBinding="{Binding Echogenicity}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Внутреняя структура" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Structure}}}" SelectedItemBinding="{Binding Structure}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="При ЦДК" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:CDK}}}" SelectedItemBinding="{Binding CDK}"></DataGridComboBoxColumn>
+                        
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -293,7 +296,8 @@
                           LoadingRow="DataGrid_LoadingRow" DataGridCell.Selected="DataGrid_GotFocus"
                           ColumnWidth="*" VerticalScrollBarVisibility="Visible" MaxHeight="112">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Локализация" Width="45*" Binding="{Binding Localization}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Локализация" Width="35*" Binding="{Binding Localization}"></DataGridTextColumn>
+                        <DataGridComboBoxColumn Header="Форма" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:FormationForm}}}" SelectedItemBinding="{Binding Form}"></DataGridComboBoxColumn>
                         <DataGridTextColumn Header="Размер, мм" Width="10*" Binding="{Binding Size}"></DataGridTextColumn>
                         <DataGridComboBoxColumn Header="Контуры" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:OutlinesType}}}" SelectedItemBinding="{Binding Outlines}"></DataGridComboBoxColumn>
                         <DataGridComboBoxColumn Header="Эхогенность" Width="15*" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:Echogenicity}}}" SelectedItemBinding="{Binding Echogenicity}"></DataGridComboBoxColumn>
@@ -328,13 +332,21 @@
                 <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="42" VerticalAlignment="Center" IsChecked="{Binding IsInvolutionConclusion, Mode=TwoWay}">Фиброзно-жировая инволюция</CheckBox>
                 <CheckBox Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="43" VerticalAlignment="Center" IsChecked="{Binding IsAdenosisConclusion, Mode=TwoWay}">УЗ признаки фиброаденоматоза</CheckBox>
                 <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="44">
+                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsFocalFormationConclusion, Mode=TwoWay}">УЗ признаки очагового образования</CheckBox>
+                    <ComboBox Margin="5,3" IsEnabled="{Binding IsFocalFormationConclusion, Mode=OneWay}" MaxWidth="200" MinWidth="200" HorizontalAlignment="Left" 
+                              ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:FocalFormationConclusionPosition}}}" 
+                              SelectedItem="{Binding FocalFormationConclusionPosition}"/>
+                </DockPanel>
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="45">
                     <CheckBox VerticalAlignment="Center" IsChecked="{Binding IsSpecificConclusion, Mode=TwoWay}"></CheckBox>
                     <TextBox Margin="5,3" IsEnabled="{Binding IsSpecificConclusion, Mode=OneWay}" Text="{Binding SpecificConclusionDesc, Mode=TwoWay}"></TextBox>
                 </DockPanel>
 
-                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="45">
+                <DockPanel Grid.Column="0" Grid.ColumnSpan="12" Grid.Row="46">
                     <Label>Рекомендована консультация</Label>
-                    <ComboBox MaxWidth="150" MinWidth="150" Margin="5,3" HorizontalAlignment="Left" ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:MammaSpecialists}}}" SelectedItem="{Binding MammaSpecialistsRecomendation}"></ComboBox>
+                    <ComboBox MaxWidth="150" MinWidth="150" Margin="5,3" HorizontalAlignment="Left" 
+                              ItemsSource="{Binding Source={viewTools:EnumBindingSource {x:Type mammaModel:MammaSpecialists}}}" 
+                              SelectedItem="{Binding MammaSpecialistsRecomendation}"></ComboBox>
                 </DockPanel>
             </Grid>
         </ScrollViewer>

@@ -91,6 +91,24 @@ namespace USD
                             form.AsDocument.Set("Size", String.Empty);
                             isNeedUpdate = true;
                         }
+
+                        var cdk = form.AsDocument["CDK"];
+                        if (cdk.AsString == "Avascular")
+                        {
+                            form.AsDocument.Set("CDK", "None");
+                            isNeedUpdate = true;
+                        }
+                    }
+
+                    var cysts = item["Cysts"].AsArray;
+                    foreach (var cyst in cysts)
+                    {
+                        var cdk = cyst.AsDocument["CDK"];
+                        if (cdk.AsString == "Avascular")
+                        {
+                            cyst.AsDocument.Set("CDK", "None");
+                            isNeedUpdate = true;
+                        }
                     }
 
                     if (isNeedUpdate)

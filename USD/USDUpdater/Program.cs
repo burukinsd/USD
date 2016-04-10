@@ -46,6 +46,7 @@ namespace USDUpdater
             if (backupDirec != null)
             {
                 Directory.Delete(backupDirec.FullName, true);
+                new DirectoryInfo(tmpDirectory).CreateSubdirectory("Backup");
             }
 
             MakeBackup(tmpDirectory);
@@ -114,7 +115,7 @@ namespace USDUpdater
             {
                 direc.Create();
             }
-            if (direc.GetDirectories().All(x => x.Name != "Backup"))
+            if (!direc.GetDirectories("Backup").Any())
             {
                 direc.CreateSubdirectory("Backup");
             }

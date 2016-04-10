@@ -12,7 +12,8 @@ namespace USD.MammaViewModels
             Outlines = OutlinesType.SmothClear;
             Echogenicity = Echogenicity.Hyper;
             Structure = Structure.Homogenous;
-            CDK = CDK.Avascular;
+            CDK = CDK.None;
+            Form = FormationForm.Circum;
         }
 
         public FocalFormationViewModel(FocalFormationModel model)
@@ -23,6 +24,18 @@ namespace USD.MammaViewModels
             Echogenicity = model.Echogenicity;
             Structure = model.Structure;
             CDK = model.CDK;
+            Form = model.Form;
+        }
+
+        public FormationForm Form
+        {
+            get { return _form; }
+            set
+            {
+                if (value == _form) return;
+                _form = value;
+                OnPropertyChanged(nameof(Form));
+            }
         }
 
         public CDK CDK
@@ -42,6 +55,7 @@ namespace USD.MammaViewModels
         private Echogenicity _echogenicity;
         private Structure _structure;
         private CDK _cdk;
+        private FormationForm _form;
 
         public string Localization
         {

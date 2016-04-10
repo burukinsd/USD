@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using Novacode;
 using USD.MammaModels;
 
@@ -15,46 +17,65 @@ namespace USD.WordExport
             var fileFullPath =
                 $"{directoryFullPath}\\{model.VisitDate.ToString("dd.MM.yyyy")} {model.FIO} {model.BirthYear}.docx";
 
-            using (DocX document = DocX.Load(@"Templates\MammaTemplate.docx"))
+            try
             {
-                document.ReplaceText("%VisitDate%", model.VisitDate.ToShortDateString());
+                using (DocX document = DocX.Load(@"Templates\MammaTemplate.docx"))
+                {
+                    document.ReplaceText("%VisitDate%", model.VisitDate.ToShortDateString());
 
-                document.ReplaceText("%FIO%", model.FIO ?? String.Empty);
+                    document.ReplaceText("%FIO%", model.FIO ?? String.Empty);
 
-                document.ReplaceText("%BirthYear%", model.BirthYear ?? String.Empty);
+                    document.ReplaceText("%BirthYear%", model.BirthYear ?? String.Empty);
 
-                document.ReplaceText("%Status%", MakeStatus(model));
+                    document.ReplaceText("%Status%", MakeStatus(model));
 
-                document.ReplaceText("%Skin%", MakeSkin(model));
+                    document.ReplaceText("%Skin%", MakeSkin(model));
 
-                document.ReplaceText("%Tissue%", MakeTissue(model));
+                    document.ReplaceText("%Tissue%", MakeTissue(model));
 
-                document.ReplaceText("%Grandular%", MakeGrandular(model));
+                    document.ReplaceText("%Grandular%", MakeGrandular(model));
 
-                document.ReplaceText("%ActualToPhase%", model.ActualToPhase ? "\r\nСтроение соответствует фазе менструального цикла." : String.Empty);
+                    document.ReplaceText("%ActualToPhase%", MakeActualToPhase(model));
 
-                document.ReplaceText("%Canals%", MakeCanals(model));
+                    document.ReplaceText("%Canals%", MakeCanals(model));
 
-                document.ReplaceText("%DiffuseChanges%", MakeDiffuseCahnges(model));
+                    document.ReplaceText("%DiffuseChanges%", MakeDiffuseCahnges(model));
 
-                document.ReplaceText("%NippleArea%", MakeNippleArea(model));
+                    document.ReplaceText("%NippleArea%", MakeNippleArea(model));
 
-                document.ReplaceText("%Cyst%", MakeCysts(model));
+                    document.ReplaceText("%Cyst%", MakeCysts(model));
 
-                document.ReplaceText("%FocalFormation%", MakeFocalFormations(model));
+                    document.ReplaceText("%FocalFormation%", MakeFocalFormations(model));
 
-                document.ReplaceText("%LymphNodes%", MakeLymphNodes(model));
+                    document.ReplaceText("%LymphNodes%", MakeLymphNodes(model));
 
-                document.ReplaceText("%AdditionalInfo%", String.IsNullOrEmpty(model.AdditionalDesc) ? String.Empty : $"\r\n{model.AdditionalDesc}");
+                    document.ReplaceText("%AdditionalInfo%", String.IsNullOrEmpty(model.AdditionalDesc) ? String.Empty : $"\r\n{model.AdditionalDesc}");
 
-                document.ReplaceText("%Conclusion%", ConclusionMaker.MakeConclusion(model));
+                    document.ReplaceText("%Conclusion%", ConclusionMaker.MakeConclusion(model));
 
-                document.ReplaceText("%Recomendation%", model.Recomendation == MammaSpecialists.None ? String.Empty : $"\r\nРекомендована консультация {model.Recomendation.EnumDescription()}, маммография");
+                    document.ReplaceText("%Recomendation%", model.Recomendation == MammaSpecialists.None ? String.Empty : $"\r\nРекомендована консультация {model.Recomendation.EnumDescription()}, маммография");
 
-                document.SaveAs(fileFullPath);
+                    document.SaveAs(fileFullPath);
+                }
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Не удается сохранить заключение. Возможно оно откртыто в Word.", "УЗД молочных желез",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             Process.Start(fileFullPath);
+        }
+
+        private static string MakeActualToPhase(MammaModel model)
+        {
+            if (model.PhisiologicalStatus == PhisiologicalStatus.Normal)
+                return model.ActualToPhase
+                    ? "\r\nСтроение соответствует фазе менструального цикла."
+                    : "\r\nСтроение не соответствует фазе менструального цикла.";
+            else
+                return String.Empty;
         }
 
         private static string MakeGrandular(MammaModel model)
@@ -104,6 +125,9 @@ namespace USD.WordExport
                     innerBuilder.Append(". ");
                     innerBuilder.Append(formation.Localization ?? String.Empty);
                     innerBuilder.Append(", ");
+                    innerBuilder.Append("форма: ");
+                    innerBuilder.Append(formation.Form.EnumDescription());
+                    innerBuilder.Append(", ");
                     innerBuilder.Append(formation.Size ?? String.Empty);
                     innerBuilder.Append("мм, ");
                     innerBuilder.Append("контуры ");
@@ -114,7 +138,7 @@ namespace USD.WordExport
                     innerBuilder.Append("внутренняя структура ");
                     innerBuilder.Append(formation.Structure.EnumDescription());
                     innerBuilder.Append(", ");
-                    innerBuilder.Append("при ЦДК ");
+                    innerBuilder.Append("кровоток при ЦДК ");
                     innerBuilder.Append(formation.CDK.EnumDescription());
                     innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");
 
@@ -156,6 +180,9 @@ namespace USD.WordExport
                         innerBuilder.Append(". ");
                         innerBuilder.Append(cyst.Localization ?? String.Empty);
                         innerBuilder.Append(", ");
+                        innerBuilder.Append("форма: ");
+                        innerBuilder.Append(cyst.Form.EnumDescription());
+                        innerBuilder.Append(", ");
                         innerBuilder.Append(cyst.Size ?? String.Empty);
                         innerBuilder.Append("мм, ");
                         innerBuilder.Append("контуры ");
@@ -166,8 +193,7 @@ namespace USD.WordExport
                         innerBuilder.Append("внутренняя структура ");
                         innerBuilder.Append(cyst.Structure.EnumDescription());
                         innerBuilder.Append(", ");
-                        innerBuilder.Append("при ЦДК ");
-                        innerBuilder.Append(cyst.CDK.EnumDescription());
+
                         innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");
 
                         builder.AppendLine(innerBuilder.ToString());

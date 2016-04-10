@@ -98,6 +98,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -131,7 +132,9 @@
     <Compile Include="MammaModels\CystModel.cs" />
     <Compile Include="MammaModels\DiffuseChanges.cs" />
     <Compile Include="MammaModels\Echogenicity.cs" />
+    <Compile Include="MammaModels\FocalFormationConclusionPosition.cs" />
     <Compile Include="MammaModels\FocalFormationModel.cs" />
+    <Compile Include="MammaModels\FormationForm.cs" />
     <Compile Include="MammaModels\MammaModel.cs" />
     <Compile Include="MammaModels\MammaSpecialists.cs" />
     <Compile Include="MammaModels\OutlinesType.cs" />

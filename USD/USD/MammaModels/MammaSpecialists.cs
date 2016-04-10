@@ -10,7 +10,7 @@ namespace USD.MammaModels
         None,
         [Description("маммолога")]
         Mammalogist,
-        [Description("онколога")]
+        [Description("онколога-маммолога")]
         Oncologist,
         [Description("гинеколога")]
         Gynecologist,

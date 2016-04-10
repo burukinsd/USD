@@ -79,8 +79,10 @@ namespace USD.MammaViewModels
             CystConslusionDesc = _model.CystConslusionDesc;
             IsInvolutionConclusion = _model.IsInvolutionConclusion;
             IsSpecificConclusion = _model.IsSpecificConclusion;
+            IsFocalFormationConclusion = _model.IsFocalFormationConclusion;
             IsAdenosisConclusion = _model.IsAdenosisConclusion;
             SpecificConclusionDesc = _model.SpecificConclusionDesc;
+            FocalFormationConclusionPosition = _model.FocalFormationConclusionPosition;
             MammaSpecialistsRecomendation = _model.Recomendation;
 
             _isChanged = false;
@@ -217,7 +219,7 @@ namespace USD.MammaViewModels
             ActualToPhase = true;
             IsCanalsExpanded = false;
             DiffuseChanges = DiffuseChanges.Moderate;
-            VisualizatioNippleArea = VisualizatioNippleArea.Good;
+            VisualizatioNippleArea = VisualizatioNippleArea.ObliqueProjection;
             AreCysts = false;
             AreFocalFormations = false;
             IsDeterminateLymphNodes = false;
@@ -225,10 +227,36 @@ namespace USD.MammaViewModels
             IsInvolutionConclusion = false;
             IsCystsConclusion = false;
             IsSpecificConclusion = false;
+            IsFocalFormationConclusion = false;
+            FocalFormationConclusionPosition = FocalFormationConclusionPosition.Left;
             FocalFormations = new ObservableCollection<FocalFormationViewModel>();
             FocalFormations.CollectionChanged += FocalFormationsOnCollectionChanged;
             Cysts = new ObservableCollection<CystViewModel>();
             Cysts.CollectionChanged += CystsOnCollectionChanged;
+        }
+
+        public bool IsFocalFormationConclusion
+        {
+            get { return _isFocalFormationConclusion; }
+            set
+            {
+                if (value == _isFocalFormationConclusion) return;
+                _isFocalFormationConclusion = value;
+                OnPropertyChanged(nameof(IsFocalFormationConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
+            }
+        }
+
+        public FocalFormationConclusionPosition FocalFormationConclusionPosition
+        {
+            get { return _focalFormationConclusionPosition; }
+            set
+            {
+                if (value == _focalFormationConclusionPosition) return;
+                _focalFormationConclusionPosition = value;
+                OnPropertyChanged(nameof(FocalFormationConclusionPosition));
+            }
         }
 
         private void FocalFormationsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -335,7 +363,8 @@ namespace USD.MammaViewModels
                     Echogenicity = x.Echogenicity,
                     Structure = x.Structure,
                     Size = x.Size,
-                    CDK = x.CDK
+                    CDK = x.CDK,
+                    Form = x.Form
                 }));
             }
 
@@ -357,7 +386,8 @@ namespace USD.MammaViewModels
                     Echogenicity = x.Echogenicity,
                     Structure = x.Structure,
                     Size = x.Size,
-                    CDK = x.CDK
+                    CDK = x.CDK,
+                    Form = x.Form
                 }));
             }
 
@@ -368,6 +398,8 @@ namespace USD.MammaViewModels
             _model.CystConslusionDesc = CystConslusionDesc;
             _model.IsInvolutionConclusion = IsInvolutionConclusion;
             _model.IsSpecificConclusion = IsSpecificConclusion;
+            _model.IsFocalFormationConclusion = IsFocalFormationConclusion;
+            _model.FocalFormationConclusionPosition = FocalFormationConclusionPosition;
             _model.IsAdenosisConclusion = IsAdenosisConclusion;
             _model.SpecificConclusionDesc = SpecificConclusionDesc;
             _model.Recomendation = MammaSpecialistsRecomendation;
@@ -408,6 +440,8 @@ namespace USD.MammaViewModels
         private CystViewModel _selectedCyst;
         private bool _isAdenosisConclusion;
         private bool _isValid;
+        private bool _isFocalFormationConclusion;
+        private FocalFormationConclusionPosition _focalFormationConclusionPosition;
 
 
         public DateTime VisitDate
@@ -686,6 +720,7 @@ namespace USD.MammaViewModels
                     IsAdenosisConclusion = false;
                     IsInvolutionConclusion = false;
                     IsSpecificConclusion = false;
+                    IsFocalFormationConclusion = false;
                 }
             }
         }

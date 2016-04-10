@@ -8,5 +8,6 @@ namespace USD.MammaModels
         public Echogenicity Echogenicity { get; set; }
         public Structure Structure { get; set; }
         public CDK CDK { get; set; }
+        public FormationForm Form { get; set; }
     }
 }

@@ -6,7 +6,13 @@ namespace USD.MammaModels
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum CDK
     {
-        [Description("аваскул€рное")]
-        Avascular
+        [Description("отсутствует")]
+        None,
+        [Description("интранодул€рный")]
+        Intranodulyarny,
+        [Description("перинодул€рный")]
+        Perinodulyarny,
+        [Description("смешанный")]
+        Mix
     }
 }

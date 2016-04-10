@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Novacode;
 
 namespace USD.MammaModels
 {
@@ -29,6 +30,14 @@ namespace USD.MammaModels
             if (mammaModel.IsAdenosisConclusion)
             {
                 conclusionStringBuilder.Append("УЗ признаки фиброаденоматоза. ");
+            }
+            if (mammaModel.IsFocalFormationConclusion)
+            {
+                conclusionStringBuilder.Append(mammaModel.FocalFormationConclusionPosition ==
+                                               FocalFormationConclusionPosition.Both
+                    ? "УЗ признаки очаговых образований "
+                    : "УЗ признаки очагового образования ");
+                conclusionStringBuilder.Append(mammaModel.FocalFormationConclusionPosition.EnumDescription());
             }
             if (mammaModel.IsSpecificConclusion)
             {

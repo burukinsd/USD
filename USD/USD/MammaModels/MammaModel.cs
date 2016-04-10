@@ -40,6 +40,8 @@ namespace USD.MammaModels
         public bool IsInvolutionConclusion { get; set; }
         public bool IsSpecificConclusion { get; set; }
         public bool IsAdenosisConclusion { get; set; }
+        public bool IsFocalFormationConclusion { get; set; }
+        public FocalFormationConclusionPosition FocalFormationConclusionPosition { get; set; }
         public string SpecificConclusionDesc { get; set; }
         public MammaSpecialists Recomendation { get; set; }
         public List<CystModel> Cysts { get; set; }
