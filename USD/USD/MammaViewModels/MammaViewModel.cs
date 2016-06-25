@@ -36,7 +36,7 @@ namespace USD.MammaViewModels
         private ObservableCollection<FocalFormationViewModel> _focalFormations;
         private TissueQuanity _grandular;
         private bool _isAdenosisConclusion;
-        private bool _isCanalsExpanded;
+        private CanalsExpandingType _canalsExpandingType;
 
         private bool _isChanged;
         private bool _isCystsConclusion;
@@ -62,6 +62,8 @@ namespace USD.MammaViewModels
 
         private DateTime _visitDate;
         private VisualizatioNippleArea _visualizatioNippleArea;
+        private bool _isEctasiaConclusion;
+        private bool _isLypomAdditionalInfo;
 
         public MammaViewModel(IMammaRepository mammaRepository)
         {
@@ -274,14 +276,14 @@ namespace USD.MammaViewModels
             }
         }
 
-        public bool IsCanalsExpanded
+        public CanalsExpandingType CanalsExpandingType
         {
-            get { return _isCanalsExpanded; }
+            get { return _canalsExpandingType; }
             set
             {
-                if (value == _isCanalsExpanded) return;
-                _isCanalsExpanded = value;
-                OnPropertyChanged(nameof(IsCanalsExpanded));
+                if (value == _canalsExpandingType) return;
+                _canalsExpandingType = value;
+                OnPropertyChanged(nameof(CanalsExpandingType));
             }
         }
 
@@ -429,6 +431,7 @@ namespace USD.MammaViewModels
                     IsInvolutionConclusion = false;
                     IsSpecificConclusion = false;
                     IsFocalFormationConclusion = false;
+                    IsEctasiaConclusion = false;
                 }
             }
         }
@@ -483,6 +486,19 @@ namespace USD.MammaViewModels
             }
         }
 
+        public bool IsEctasiaConclusion
+        {
+            get { return _isEctasiaConclusion; }
+            set
+            {
+                if (value == _isEctasiaConclusion) return;
+                _isEctasiaConclusion = value;
+                OnPropertyChanged(nameof(IsEctasiaConclusion));
+                if (value)
+                    IsNotPatalogyConclusion = false;
+            }
+        }
+
         public bool IsSpecificConclusion
         {
             get { return _isSpecificConclusion; }
@@ -493,6 +509,18 @@ namespace USD.MammaViewModels
                 OnPropertyChanged(nameof(IsSpecificConclusion));
                 if (value)
                     IsNotPatalogyConclusion = false;
+            }
+        }
+
+
+        public bool IsLypomAdditionalInfo
+        {
+            get { return _isLypomAdditionalInfo; }
+            set
+            {
+                if (value == _isLypomAdditionalInfo) return;
+                _isLypomAdditionalInfo = value;
+                OnPropertyChanged(nameof(IsLypomAdditionalInfo));
             }
         }
 
@@ -561,7 +589,7 @@ namespace USD.MammaViewModels
             SkinChangedDesc = _model.SkinChangedDesc;
             MaxThicknessGlandularLayer = _model.MaxThicknessGlandularLayer;
             ActualToPhase = _model.ActualToPhase;
-            IsCanalsExpanded = _model.IsCanalsExpanded;
+            CanalsExpandingType = _model.CanalsExpandingType;
             CanalsExpandingDesc = _model.CanalsExpandingDesc;
             DiffuseChanges = _model.DiffuseChanges;
             DiffuseChangesFeatures = _model.DiffuseChangesFeatures;
@@ -583,11 +611,14 @@ namespace USD.MammaViewModels
             IsSpecificConclusion = _model.IsSpecificConclusion;
             IsFocalFormationConclusion = _model.IsFocalFormationConclusion;
             IsAdenosisConclusion = _model.IsAdenosisConclusion;
+            IsEctasiaConclusion = _model.IsEctasiaConclusion;
             SpecificConclusionDesc = _model.SpecificConclusionDesc;
             FocalFormationConclusionPosition = _model.FocalFormationConclusionPosition;
             MammaSpecialistsRecomendation = _model.Recomendation;
             Grandular = _model.Grandular;
             Adipose = _model.Adipose;
+            LymphNodesDesc = _model.LymphNodesDesc;
+            IsLypomAdditionalInfo = _model.IsLypomAdditionalInfo;
 
             _isChanged = false;
         }
@@ -686,7 +717,7 @@ namespace USD.MammaViewModels
             Grandular = TissueQuanity.Enogh;
             Adipose = TissueQuanity.Many;
             ActualToPhase = true;
-            IsCanalsExpanded = false;
+            CanalsExpandingType = CanalsExpandingType.Not;
             DiffuseChanges = DiffuseChanges.Moderate;
             VisualizatioNippleArea = VisualizatioNippleArea.ObliqueProjection;
             AreCysts = false;
@@ -787,7 +818,7 @@ namespace USD.MammaViewModels
             _model.Adipose = Adipose;
             _model.MaxThicknessGlandularLayer = MaxThicknessGlandularLayer;
             _model.ActualToPhase = ActualToPhase;
-            _model.IsCanalsExpanded = IsCanalsExpanded;
+            _model.CanalsExpandingType = CanalsExpandingType;
             _model.CanalsExpandingDesc = CanalsExpandingDesc;
             _model.DiffuseChanges = DiffuseChanges;
             _model.DiffuseChangesFeatures = DiffuseChangesFeatures;
@@ -838,6 +869,7 @@ namespace USD.MammaViewModels
             }
 
             _model.IsDeterminateLymphNodes = IsDeterminateLymphNodes;
+            _model.LymphNodesDesc = LymphNodesDesc;
             _model.AdditionalDesc = AdditionalDesc;
             _model.IsNotPatalogyConclusion = IsNotPatalogyConclusion;
             _model.IsCystsConclusion = IsCystsConclusion;
@@ -847,8 +879,10 @@ namespace USD.MammaViewModels
             _model.IsFocalFormationConclusion = IsFocalFormationConclusion;
             _model.FocalFormationConclusionPosition = FocalFormationConclusionPosition;
             _model.IsAdenosisConclusion = IsAdenosisConclusion;
+            _model.IsEctasiaConclusion = IsEctasiaConclusion;
             _model.SpecificConclusionDesc = SpecificConclusionDesc;
             _model.Recomendation = MammaSpecialistsRecomendation;
+            _model.IsLypomAdditionalInfo = IsLypomAdditionalInfo;
         }
 
         [NotifyPropertyChangedInvocator]

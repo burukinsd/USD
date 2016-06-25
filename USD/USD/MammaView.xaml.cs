@@ -63,6 +63,8 @@ namespace USD
             }
 
             DataContext = ContainerFactory.Get<MammaViewModel>();
+
+            MainScrollViewer.ScrollToTop();
         }
 
         private void MammaView_OnClosing(object sender, CancelEventArgs e)

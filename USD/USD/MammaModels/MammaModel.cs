@@ -30,7 +30,7 @@ namespace USD.MammaModels
 
         public decimal? MaxThicknessGlandularLayer { get; set; }
         public bool ActualToPhase { get; set; } = true;
-        public bool IsCanalsExpanded { get; set; }
+        public CanalsExpandingType CanalsExpandingType { get; set; }
         public string CanalsExpandingDesc { get; set; }
         public DiffuseChanges DiffuseChanges { get; set; }
         public string DiffuseChangesFeatures { get; set; }
@@ -53,5 +53,7 @@ namespace USD.MammaModels
         public string SpecificConclusionDesc { get; set; }
         public MammaSpecialists Recomendation { get; set; }
         public List<CystModel> Cysts { get; set; }
+        public bool IsEctasiaConclusion { get; set; }
+        public bool IsLypomAdditionalInfo { get; set; }
     }
 }

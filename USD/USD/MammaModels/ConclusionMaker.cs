@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Novacode;
 
@@ -37,10 +38,19 @@ namespace USD.MammaModels
                     ? "УЗ признаки очаговых образований "
                     : "УЗ признаки очагового образования ");
                 conclusionStringBuilder.Append(mammaModel.FocalFormationConclusionPosition.EnumDescription());
+                conclusionStringBuilder.Append(". ");
             }
-            if (mammaModel.IsSpecificConclusion)
+            if (mammaModel.IsEctasiaConclusion)
+            {
+                conclusionStringBuilder.Append("УЗ признаки доброкачественной эктазии млечных протоков по типу дисгормональных молочных желез. ");
+            }
+            if (mammaModel.IsSpecificConclusion && !String.IsNullOrWhiteSpace(mammaModel.SpecificConclusionDesc))
             {
                 conclusionStringBuilder.Append(mammaModel.SpecificConclusionDesc ?? string.Empty);
+                if (!mammaModel.SpecificConclusionDesc.EndsWith("."))
+                {
+                    conclusionStringBuilder.Append(".");
+                }
             }
 
             return conclusionStringBuilder.ToString();

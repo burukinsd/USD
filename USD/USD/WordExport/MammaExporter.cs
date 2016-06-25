@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Novacode;
@@ -50,7 +51,7 @@ namespace USD.WordExport
                     document.ReplaceText("%LymphNodes%", MakeLymphNodes(model));
 
                     document.ReplaceText("%AdditionalInfo%",
-                        string.IsNullOrEmpty(model.AdditionalDesc) ? string.Empty : $"\r\n{model.AdditionalDesc}");
+                        MakeAdditionalInfo(model));
 
                     document.ReplaceText("%Conclusion%", ConclusionMaker.MakeConclusion(model));
 
@@ -70,6 +71,25 @@ namespace USD.WordExport
             }
 
             Process.Start(fileFullPath);
+        }
+
+        private static string MakeAdditionalInfo(MammaModel model)
+        {
+            var builder = new StringBuilder();
+            if (!string.IsNullOrWhiteSpace(model.AdditionalDesc) || model.IsLypomAdditionalInfo)
+            {
+                builder.AppendLine();
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.AdditionalDesc))
+            {
+                builder.AppendLine(model.AdditionalDesc);
+            }
+            if (model.IsLypomAdditionalInfo)
+            {
+                builder.AppendLine("УЗ признаки доброкачественной инволютивной перестройки жировой ткани по типу липомы.");
+            }
+            return builder.ToString();
         }
 
         private static string MakeActualToPhase(MammaModel model)
@@ -193,7 +213,8 @@ namespace USD.WordExport
                         innerBuilder.Append("внутренняя структура ");
                         innerBuilder.Append(cyst.Structure.EnumDescription());
                         innerBuilder.Append(", ");
-
+                        innerBuilder.Append("кровоток при ЦДК ");
+                        innerBuilder.Append(cyst.CDK.EnumDescription());
                         innerBuilder.Append(number != model.FocalFormations.Count ? ";" : ".");
 
                         builder.AppendLine(innerBuilder.ToString());
@@ -256,14 +277,14 @@ namespace USD.WordExport
         private static string MakeCanals(MammaModel model)
         {
             var builder = new StringBuilder();
-            if (model.IsCanalsExpanded)
+            if (model.CanalsExpandingType == CanalsExpandingType.ExpandingSpecific)
             {
-                builder.Append("расширены до");
+                builder.Append("расширены до ");
                 builder.Append(model.CanalsExpandingDesc ?? string.Empty);
             }
             else
             {
-                builder.Append("не расширены");
+                builder.Append(model.CanalsExpandingType.EnumDescription());
             }
             return builder.ToString();
         }
