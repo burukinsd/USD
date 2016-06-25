@@ -627,7 +627,7 @@ namespace USD.MammaViewModels
         {
             var index = Cysts.IndexOf(SelectedCyst);
             Cysts.Remove(SelectedCyst);
-            SelectedCyst = Cysts[index < Cysts.Count ? index : 0];
+            SelectedCyst = Cysts.Any() ? Cysts[index < Cysts.Count ? index : 0] : null;
         }
 
         private void AddCyst()
@@ -652,7 +652,7 @@ namespace USD.MammaViewModels
         {
             var index = FocalFormations.IndexOf(SelectedFocalFormation);
             FocalFormations.Remove(SelectedFocalFormation);
-            SelectedFocalFormation = FocalFormations[index < FocalFormations.Count ? index : 0];
+            SelectedFocalFormation = FocalFormations.Any() ? FocalFormations[index < FocalFormations.Count ? index : 0] : null;
         }
 
         private void AddFocalFormation()

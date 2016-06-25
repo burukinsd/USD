@@ -23,7 +23,15 @@ namespace USD
         private static void Main()
         {
             EnsureDbFile();
-            DbMigration();
+            try
+            {
+                DbMigration();
+            }
+            catch (Exception ex)
+            {
+                SendErrorMail(ex);
+                throw;
+            }
 
             ExportDirectoryCreator.EnsureDirectory();
 
@@ -102,13 +110,16 @@ namespace USD
                     }
 
                     var cysts = item["Cysts"].AsArray;
-                    foreach (var cyst in cysts)
+                    if (cysts != null)
                     {
-                        var cdk = cyst.AsDocument["CDK"];
-                        if (cdk.AsString == "Avascular")
+                        foreach (var cyst in cysts)
                         {
-                            cyst.AsDocument.Set("CDK", "None");
-                            isNeedUpdate = true;
+                            var cdk = cyst.AsDocument["CDK"];
+                            if (cdk.AsString == "Avascular")
+                            {
+                                cyst.AsDocument.Set("CDK", "None");
+                                isNeedUpdate = true;
+                            }
                         }
                     }
 
@@ -146,29 +157,34 @@ namespace USD
             }
             catch (Exception ex)
             {
-                var mail = new MailMessage
-                {
-                    From = new MailAddress("usd@burukinsd.ru", "УЗД ошибка"),
-                    Subject = "Ошибка в программе УЗИ.",
-                    SubjectEncoding = Encoding.UTF8,
-                    BodyEncoding = Encoding.UTF8,
-                    IsBodyHtml = false,
-                    Body = JsonConvert.SerializeObject(ex),
-                    Priority = MailPriority.High
-                };
-                mail.Attachments.Add(new Attachment(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName));
-                mail.To.Add("burukinsd@gmail.com");
-                using (var client = new SmtpClient
-                {
-                    Host = "smtp.yandex.ru",
-                    Port = 587,
-                    EnableSsl = true,
-                    Credentials = new NetworkCredential("usd@burukinsd.ru", "191613")
-                })
-                {
-                    client.Send(mail);
-                }
+                SendErrorMail(ex);
                 throw;
+            }
+        }
+
+        private static void SendErrorMail(Exception ex)
+        {
+            var mail = new MailMessage
+            {
+                From = new MailAddress("usd@burukinsd.ru", "УЗД ошибка"),
+                Subject = "Ошибка в программе УЗИ.",
+                SubjectEncoding = Encoding.UTF8,
+                BodyEncoding = Encoding.UTF8,
+                IsBodyHtml = false,
+                Body = JsonConvert.SerializeObject(ex),
+                Priority = MailPriority.High
+            };
+            mail.Attachments.Add(new Attachment(DirectoryHelper.GetDataDirectory() + Settings.Default.LiteDbFileName));
+            mail.To.Add("burukinsd@gmail.com");
+            using (var client = new SmtpClient
+            {
+                Host = "smtp.yandex.ru",
+                Port = 587,
+                EnableSsl = true,
+                Credentials = new NetworkCredential("usd@burukinsd.ru", "191613")
+            })
+            {
+                client.Send(mail);
             }
         }
     }
