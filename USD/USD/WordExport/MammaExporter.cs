@@ -16,7 +16,7 @@ namespace USD.WordExport
             var directoryFullPath = ExportDirectoryCreator.EnsureDirectory();
 
             var fileFullPath =
-                $"{directoryFullPath}\\{model.VisitDate.ToString("dd.MM.yyyy")} {model.FIO} {model.BirthYear}.docx";
+                $"{directoryFullPath}\\{model.VisitDate:dd.MM.yyyy} {model.FIO} {model.BirthYear}.docx";
 
             try
             {

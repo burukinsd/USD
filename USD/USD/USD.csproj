@@ -77,7 +77,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocX, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
@@ -200,7 +200,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="USD_TemporaryKey.pfx" />
     <Resource Include="2-512.ico" />
     <Content Include="Templates\MammaTemplate.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

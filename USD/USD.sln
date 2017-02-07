@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26127.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USD", "USD\USD.csproj", "{8A62F6E9-F9C1-4D06-AF8F-E8DF5362119F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDUpdate", "USDUpdate\USDUpdate.csproj", "{A68F9409-5D67-4F2A-9614-2CB1FD0D30B0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USDUpdater", "USDUpdater\USDUpdater.csproj", "{4A3B9551-F87F-43D0-BCBF-FBEA85B0778F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +15,6 @@ Global
 		{8A62F6E9-F9C1-4D06-AF8F-E8DF5362119F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A62F6E9-F9C1-4D06-AF8F-E8DF5362119F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A62F6E9-F9C1-4D06-AF8F-E8DF5362119F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A68F9409-5D67-4F2A-9614-2CB1FD0D30B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A68F9409-5D67-4F2A-9614-2CB1FD0D30B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A68F9409-5D67-4F2A-9614-2CB1FD0D30B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A68F9409-5D67-4F2A-9614-2CB1FD0D30B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A3B9551-F87F-43D0-BCBF-FBEA85B0778F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A3B9551-F87F-43D0-BCBF-FBEA85B0778F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A3B9551-F87F-43D0-BCBF-FBEA85B0778F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A3B9551-F87F-43D0-BCBF-FBEA85B0778F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
